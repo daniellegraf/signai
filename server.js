@@ -34,7 +34,7 @@ app.options("/detect-image", cors());
 
 app.use(express.json());
 
-// Winston API-nyckel (lägg den i Render → Environment → WINSTON_API_KEY)
+// Winston API-nyckel (Render → Environment → WINSTON_API_KEY)
 const WINSTON_API_KEY = process.env.WINSTON_API_KEY;
 
 // MCP JSON-RPC endpoint
@@ -49,7 +49,12 @@ if (!fs.existsSync(uploadDir)) {
 // Gör /uploads publikt (så Winston kan hämta bilden via URL)
 app.use("/uploads", express.static(uploadDir));
 
-// Health-check
+// Health-check för Render
+app.get("/healthz", (req, res) => {
+  res.json({ status: "ok", service: "signai-backend", path: "/healthz" });
+});
+
+// Enkel root-check
 app.get("/", (req, res) => {
   res.json({ status: "ok", service: "signai-backend" });
 });
@@ -63,12 +68,20 @@ app.get("/", (req, res) => {
 app.post("/detect-image", upload.single("image"), async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ error: "No image uploaded" });
+      return res.json({
+        ai_score: 0.5,
+        label: "Error: no image uploaded",
+        version: "signai-backend",
+        raw: { error: "No image uploaded" }
+      });
     }
     if (!WINSTON_API_KEY) {
-      return res
-        .status(500)
-        .json({ error: "WINSTON_API_KEY not set in environment" });
+      return res.json({
+        ai_score: 0.5,
+        label: "Error: WINSTON_API_KEY missing",
+        version: "signai-backend",
+        raw: { error: "WINSTON_API_KEY not set in environment" }
+      });
     }
 
     // 1) Spara bild till /tmp/uploads
@@ -103,7 +116,9 @@ app.post("/detect-image", upload.single("image"), async (req, res) => {
     const winstonRes = await axios.post(WINSTON_MCP_URL, rpcBody, {
       headers: {
         "content-type": "application/json",
-        accept: "application/json"
+        accept: "application/json",
+        // viktigt enligt docs:
+        jsonrpc: "2.0"
       },
       timeout: 20000
     });
@@ -111,16 +126,24 @@ app.post("/detect-image", upload.single("image"), async (req, res) => {
     const data = winstonRes.data;
     console.log("🧠 Winston MCP raw response:", JSON.stringify(data, null, 2));
 
-    // 4) Försök plocka ut "kärnan" ur JSON-RPC-svaret
-    //    Exakt struktur beror på Winston, så vi gör robust heuristik.
-    const result = data.result || data; // om JSON-RPC ligger i .result
+    // 4) Plocka ut relevant data ur JSON-RPC-svaret
+    if (data.error) {
+      // JSON-RPC-fel från Winston
+      return res.json({
+        ai_score: 0.5,
+        label: "Error from Winston: " + data.error.message,
+        version: "winston-ai-image-mcp",
+        raw: data
+      });
+    }
+
+    const result = data.result || data;
     const payload =
       (result && result.content) ||
       (result && result.output) ||
       result ||
       data;
 
-    // Försök hitta en sannolik AI-score (0–1 eller 0–100)
     let aiScore =
       (typeof payload.ai_score === "number" && payload.ai_score) ??
       (typeof payload.ai_probability === "number" && payload.ai_probability) ??
@@ -128,11 +151,9 @@ app.post("/detect-image", upload.single("image"), async (req, res) => {
       null;
 
     if (aiScore !== null && aiScore > 1) {
-      // 0–100 → 0–1
-      aiScore = aiScore / 100;
+      aiScore = aiScore / 100; // 0–100 -> 0–1
     }
 
-    // Label – gissa utifrån vanliga fält
     let label = payload.label;
     if (!label && typeof payload.is_ai === "boolean") {
       label = payload.is_ai ? "AI" : "Human";
@@ -141,19 +162,17 @@ app.post("/detect-image", upload.single("image"), async (req, res) => {
       label = payload.is_human ? "Human" : "AI";
     }
 
-    // defaultar om vi inte hittar något
     if (aiScore === null) aiScore = 0.5;
     if (!label) label = "Unknown";
 
     const version =
       payload.version || payload.model || "winston-ai-image-mcp";
 
-    // 5) Skicka tillbaka till frontenden i ett enkelt format
-    res.json({
-      ai_score: aiScore, // 0–1, högre = mer AI
+    return res.json({
+      ai_score: aiScore,
       label,
       version,
-      raw: data // hela originalsvaret för debugging
+      raw: data
     });
   } catch (err) {
     console.error(
@@ -161,9 +180,13 @@ app.post("/detect-image", upload.single("image"), async (req, res) => {
       err.response?.status,
       err.response?.data || err.message
     );
-    res.status(500).json({
-      error: "Winston AI request failed",
-      details: err.response?.data || err.message
+
+    // Viktigt: skicka 200 även vid fel, så frontenden ser vad som hänt
+    return res.json({
+      ai_score: 0.5,
+      label: "Error contacting Winston: " + (err.response?.status || err.code || "unknown"),
+      version: "winston-ai-image-mcp",
+      raw: err.response?.data || { message: err.message }
     });
   }
 });
