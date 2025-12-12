@@ -68,7 +68,10 @@ function getImageSize(buffer) {
   if (buffer.length > 4 && buffer[0] === 0xff && buffer[1] === 0xd8) {
     let i = 2;
     while (i < buffer.length) {
-      if (buffer[i] !== 0xff) { i++; continue; }
+      if (buffer[i] !== 0xff) {
+        i++;
+        continue;
+      }
       const marker = buffer[i + 1];
       const size = buffer.readUInt16BE(i + 2);
 
@@ -83,6 +86,14 @@ function getImageSize(buffer) {
     }
   }
 
+  return null;
+}
+
+// ===== Hjälpfunktion: plocka första giltiga siffra =====
+function pickNumber(...vals) {
+  for (const v of vals) {
+    if (typeof v === "number" && Number.isFinite(v)) return v;
+  }
   return null;
 }
 
@@ -107,9 +118,19 @@ app.post("/detect-image", upload.single("image"), async (req, res) => {
       });
     }
 
-    // ✅ Förklaring till Winston-fel: minsta krav 256x256
+    // Om någon råkar skicka t.ex. test.txt → tydligt fel direkt
     const size = getImageSize(req.file.buffer);
-    if (size && (size.width < 256 || size.height < 256)) {
+    if (!size) {
+      return res.json({
+        ai_score: 0.5,
+        label: "Error: uploaded file is not a PNG/JPEG image",
+        version: "signai-backend",
+        raw: { error: "NOT_AN_IMAGE" },
+      });
+    }
+
+    // ✅ Winston kräver minst 256x256 (enligt din Render-logg)
+    if (size.width < 256 || size.height < 256) {
       return res.json({
         ai_score: 0.5,
         label: `Error: image too small (${size.width}x${size.height}). Winston requires >=256x256.`,
@@ -121,7 +142,8 @@ app.post("/detect-image", upload.single("image"), async (req, res) => {
     // 1) Spara bilden till /tmp/uploads
     const originalName = req.file.originalname || "image.png";
     const ext = path.extname(originalName) || ".png";
-    const filename = Date.now() + "-" + Math.random().toString(36).slice(2) + ext;
+    const filename =
+      Date.now() + "-" + Math.random().toString(36).slice(2) + ext;
     const filePath = path.join(uploadDir, filename);
 
     fs.writeFileSync(filePath, req.file.buffer);
@@ -166,32 +188,43 @@ app.post("/detect-image", upload.single("image"), async (req, res) => {
     if (data?.error) {
       return res.json({
         ai_score: 0.5,
-        label: "Error from Winston: " + data.error.message,
+        label: "Error from Winston: " + (data.error.message || "unknown"),
         version: "winston-ai-image-mcp",
         raw: data,
       });
     }
 
     // Winston JSON-RPC kan returnera data på lite olika ställen
-    const result = data.result || data;
-    const payload = result?.content || result?.output || result || data;
+    const result = data?.result ?? data;
+    const payload =
+      result?.content ??
+      result?.output ??
+      result ??
+      data;
 
-    let aiScore =
-      (typeof payload.ai_score === "number" && payload.ai_score) ??
-      (typeof payload.ai_probability === "number" && payload.ai_probability) ??
-      (typeof payload.score === "number" && payload.score) ??
-      null;
+    // ✅ FIX: aiScore ska ALDRIG kunna bli false
+    let aiScore = pickNumber(
+      payload?.ai_score,
+      payload?.ai_probability,
+      payload?.score,
+      payload?.probability
+    );
 
+    // Om Winston ger 0–100
     if (aiScore !== null && aiScore > 1) aiScore = aiScore / 100;
 
-    let label = payload.label;
-    if (!label && typeof payload.is_ai === "boolean") label = payload.is_ai ? "AI" : "Human";
-    if (!label && typeof payload.is_human === "boolean") label = payload.is_human ? "Human" : "AI";
-
+    // Fallback
     if (aiScore === null) aiScore = 0.5;
+
+    let label = payload?.label;
+    if (!label && typeof payload?.is_ai === "boolean")
+      label = payload.is_ai ? "AI" : "Human";
+    if (!label && typeof payload?.is_human === "boolean")
+      label = payload.is_human ? "Human" : "AI";
     if (!label) label = "Unknown";
 
-    const version = payload.version || payload.model || "winston-ai-image-mcp";
+    const version =
+      payload?.version || payload?.model || "winston-ai-image-mcp";
 
     return res.json({
       ai_score: aiScore,
@@ -200,11 +233,17 @@ app.post("/detect-image", upload.single("image"), async (req, res) => {
       raw: data,
     });
   } catch (err) {
-    console.error("❌ Winston error:", err.response?.status, err.response?.data || err.message);
+    console.error(
+      "❌ Winston error:",
+      err.response?.status,
+      err.response?.data || err.message
+    );
 
     return res.json({
       ai_score: 0.5,
-      label: "Error contacting Winston: " + (err.response?.status || err.code || "unknown"),
+      label:
+        "Error contacting Winston: " +
+        (err.response?.status || err.code || "unknown"),
       version: "winston-ai-image-mcp",
       raw: err.response?.data || { message: err.message },
     });
