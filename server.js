@@ -9,14 +9,10 @@ import path from "path";
 dotenv.config();
 
 const app = express();
-
-// Render / reverse proxy: viktigt för rätt https-länk
 app.set("trust proxy", 1);
 
-// Multer: spara fil i minne först
 const upload = multer({ storage: multer.memoryStorage() });
 
-// 🔓 CORS – tillåt allt (enkelt läge för att slippa "Failed to fetch")
 app.use(
   cors({
     origin: true,
@@ -25,40 +21,80 @@ app.use(
   })
 );
 
-// Preflight (OPTIONS) för /detect-image
 app.options("/detect-image", cors());
-
 app.use(express.json());
 
-// Winston API-nyckel
 const WINSTON_API_KEY = process.env.WINSTON_API_KEY;
-
-// MCP JSON-RPC endpoint
 const WINSTON_MCP_URL = "https://api.gowinston.ai/mcp/v1";
 
-// Katalog för temporära bilder på Render
 const uploadDir = "/tmp/uploads";
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
-// Serva bilder publikt så Winston kan nå dem
-app.use("/uploads", express.static(uploadDir));
+// Sätt headers på uploads (bra för externa fetchers)
+app.use(
+  "/uploads",
+  (req, res, next) => {
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("Cache-Control", "public, max-age=60");
+    next();
+  },
+  express.static(uploadDir)
+);
 
-// Health-check
 app.get("/healthz", (req, res) => {
   res.json({ status: "ok", service: "signai-backend", path: "/healthz" });
 });
 
-// Root
 app.get("/", (req, res) => {
   res.json({ status: "ok", service: "signai-backend" });
 });
 
-// ===== Hjälpfunktion: läs bildstorlek för PNG/JPEG =====
+// --- MAGIC BYTES: filtyp ---
+function detectImageType(buffer) {
+  if (!buffer || buffer.length < 16) return null;
+
+  // PNG: 89 50 4E 47
+  if (
+    buffer[0] === 0x89 &&
+    buffer[1] === 0x50 &&
+    buffer[2] === 0x4e &&
+    buffer[3] === 0x47
+  ) {
+    return "png";
+  }
+
+  // JPEG: FF D8
+  if (buffer[0] === 0xff && buffer[1] === 0xd8) {
+    return "jpeg";
+  }
+
+  // WEBP: "RIFF....WEBP"
+  if (
+    buffer[0] === 0x52 && // R
+    buffer[1] === 0x49 && // I
+    buffer[2] === 0x46 && // F
+    buffer[3] === 0x46 && // F
+    buffer[8] === 0x57 && // W
+    buffer[9] === 0x45 && // E
+    buffer[10] === 0x42 && // B
+    buffer[11] === 0x50 // P
+  ) {
+    return "webp";
+  }
+
+  return null;
+}
+
+// --- Bildstorlek: PNG/JPEG ---
 function getImageSize(buffer) {
-  // PNG: width/height på bytes 16-24
-  if (buffer.length > 24 && buffer[0] === 0x89 && buffer[1] === 0x50) {
+  // PNG width/height på bytes 16-24
+  if (
+    buffer.length > 24 &&
+    buffer[0] === 0x89 &&
+    buffer[1] === 0x50 &&
+    buffer[2] === 0x4e &&
+    buffer[3] === 0x47
+  ) {
     const w = buffer.readUInt32BE(16);
     const h = buffer.readUInt32BE(20);
     return { width: w, height: h, type: "png" };
@@ -75,8 +111,7 @@ function getImageSize(buffer) {
       const marker = buffer[i + 1];
       const size = buffer.readUInt16BE(i + 2);
 
-      // SOF0 (0xC0) eller SOF2 (0xC2)
-      if (marker === 0xC0 || marker === 0xC2) {
+      if (marker === 0xc0 || marker === 0xc2) {
         const h = buffer.readUInt16BE(i + 5);
         const w = buffer.readUInt16BE(i + 7);
         return { width: w, height: h, type: "jpeg" };
@@ -89,15 +124,7 @@ function getImageSize(buffer) {
   return null;
 }
 
-// ===== Hjälpfunktion: plocka första giltiga siffra =====
-function pickNumber(...vals) {
-  for (const v of vals) {
-    if (typeof v === "number" && Number.isFinite(v)) return v;
-  }
-  return null;
-}
-
-// ===== HUVUD-ROUTE: /detect-image =====
+// ===== /detect-image =====
 app.post("/detect-image", upload.single("image"), async (req, res) => {
   try {
     if (!req.file) {
@@ -118,18 +145,38 @@ app.post("/detect-image", upload.single("image"), async (req, res) => {
       });
     }
 
-    // Om någon råkar skicka t.ex. test.txt → tydligt fel direkt
+    // 0) Kolla filtyp via magic bytes
+    const realType = detectImageType(req.file.buffer);
+
+    if (!realType) {
+      return res.json({
+        ai_score: 0.5,
+        label: "Error: unknown image type. Use PNG or JPEG.",
+        version: "signai-backend",
+        raw: { error: "UNKNOWN_IMAGE_TYPE" },
+      });
+    }
+
+    if (realType === "webp") {
+      return res.json({
+        ai_score: 0.5,
+        label: "Error: WEBP not supported. Convert to PNG/JPEG before upload.",
+        version: "signai-backend",
+        raw: { error: "WEBP_NOT_SUPPORTED" },
+      });
+    }
+
+    // 1) Kolla storlek (måste vara >= 256x256)
     const size = getImageSize(req.file.buffer);
     if (!size) {
       return res.json({
         ai_score: 0.5,
-        label: "Error: uploaded file is not a PNG/JPEG image",
+        label: `Error: could not read image dimensions (type=${realType}). Use PNG/JPEG.`,
         version: "signai-backend",
-        raw: { error: "NOT_AN_IMAGE" },
+        raw: { error: "CANNOT_READ_DIMENSIONS", type: realType },
       });
     }
 
-    // ✅ Winston kräver minst 256x256 (enligt din Render-logg)
     if (size.width < 256 || size.height < 256) {
       return res.json({
         ai_score: 0.5,
@@ -139,27 +186,24 @@ app.post("/detect-image", upload.single("image"), async (req, res) => {
       });
     }
 
-    // 1) Spara bilden till /tmp/uploads
-    const originalName = req.file.originalname || "image.png";
-    const ext = path.extname(originalName) || ".png";
+    // 2) Spara fil med RÄTT filändelse baserat på verklig typ
+    const ext = realType === "png" ? ".png" : ".jpg";
     const filename =
       Date.now() + "-" + Math.random().toString(36).slice(2) + ext;
     const filePath = path.join(uploadDir, filename);
-
     fs.writeFileSync(filePath, req.file.buffer);
 
-    // 2) Bygg publik URL (tvinga korrekt https genom proxy-header)
+    // 3) Bygg publik URL (tvinga https)
     const proto = (req.headers["x-forwarded-proto"] || "https")
       .toString()
       .split(",")[0]
       .trim();
-
     const baseUrl = `${proto}://${req.get("host")}`;
     const imageUrl = `${baseUrl}/uploads/${filename}`;
 
-    console.log("🔗 Using image URL for Winston:", imageUrl);
+    console.log("🔗 Winston imageUrl:", imageUrl, "type:", realType, "size:", size);
 
-    // 3) JSON-RPC anrop till Winston MCP – ai-image-detection
+    // 4) Winston MCP call
     const rpcBody = {
       jsonrpc: "2.0",
       id: 2,
@@ -183,67 +227,57 @@ app.post("/detect-image", upload.single("image"), async (req, res) => {
     });
 
     const data = winstonRes.data;
-    console.log("🧠 Winston MCP raw response:", JSON.stringify(data, null, 2));
 
-    if (data?.error) {
+    // Om Winston svarar med textfel i content → skicka tillbaka det tydligt
+    const maybeTextError =
+      data?.result?.content?.find((x) => x?.type === "text")?.text || null;
+
+    if (maybeTextError) {
       return res.json({
         ai_score: 0.5,
-        label: "Error from Winston: " + (data.error.message || "unknown"),
+        label: "Winston error: " + maybeTextError,
         version: "winston-ai-image-mcp",
-        raw: data,
+        raw: {
+          winston: data,
+          debug: { imageUrl, realType, size },
+        },
       });
     }
 
-    // Winston JSON-RPC kan returnera data på lite olika ställen
-    const result = data?.result ?? data;
-    const payload =
-      result?.content ??
-      result?.output ??
-      result ??
-      data;
+    // Försök plocka score från payload (om Winston faktiskt skickar)
+    const result = data.result || data;
+    const payload = result?.content || result?.output || result || data;
 
-    // ✅ FIX: aiScore ska ALDRIG kunna bli false
-    let aiScore = pickNumber(
-      payload?.ai_score,
-      payload?.ai_probability,
-      payload?.score,
-      payload?.probability
-    );
+    let aiScore =
+      (typeof payload.ai_score === "number" && payload.ai_score) ??
+      (typeof payload.ai_probability === "number" && payload.ai_probability) ??
+      (typeof payload.score === "number" && payload.score) ??
+      null;
 
-    // Om Winston ger 0–100
     if (aiScore !== null && aiScore > 1) aiScore = aiScore / 100;
 
-    // Fallback
+    let label = payload.label;
+    if (!label && typeof payload.is_ai === "boolean") label = payload.is_ai ? "AI" : "Human";
+    if (!label && typeof payload.is_human === "boolean") label = payload.is_human ? "Human" : "AI";
+
     if (aiScore === null) aiScore = 0.5;
-
-    let label = payload?.label;
-    if (!label && typeof payload?.is_ai === "boolean")
-      label = payload.is_ai ? "AI" : "Human";
-    if (!label && typeof payload?.is_human === "boolean")
-      label = payload.is_human ? "Human" : "AI";
     if (!label) label = "Unknown";
-
-    const version =
-      payload?.version || payload?.model || "winston-ai-image-mcp";
 
     return res.json({
       ai_score: aiScore,
       label,
-      version,
-      raw: data,
+      version: payload.version || payload.model || "winston-ai-image-mcp",
+      raw: {
+        winston: data,
+        debug: { imageUrl, realType, size },
+      },
     });
   } catch (err) {
-    console.error(
-      "❌ Winston error:",
-      err.response?.status,
-      err.response?.data || err.message
-    );
+    console.error("❌ Winston error:", err.response?.status, err.response?.data || err.message);
 
     return res.json({
       ai_score: 0.5,
-      label:
-        "Error contacting Winston: " +
-        (err.response?.status || err.code || "unknown"),
+      label: "Error contacting Winston: " + (err.response?.status || err.code || "unknown"),
       version: "winston-ai-image-mcp",
       raw: err.response?.data || { message: err.message },
     });
