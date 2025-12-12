@@ -9,7 +9,7 @@ import path from "path";
 dotenv.config();
 
 const app = express();
-
+app.set("trust proxy", 1);
 // Multer: spara fil i minne först
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -81,7 +81,8 @@ app.post("/detect-image", upload.single("image"), async (req, res) => {
     fs.writeFileSync(filePath, req.file.buffer);
 
     // 2) Publik URL som Winston kan hämta
-    const baseUrl = `${req.protocol}://${req.get("host")}`;
+    const proto = (req.headers["x-forwarded-proto"] || "https").toString().split(",")[0].trim();
+const baseUrl = `${proto}://${req.get("host")}`;
     const imageUrl = `${baseUrl}/uploads/${filename}`;
 
     console.log("🔗 Using image URL for Winston:", imageUrl);
@@ -181,3 +182,4 @@ const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log("Backend running on port", PORT);
 });
+
