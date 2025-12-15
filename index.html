@@ -1687,10 +1687,7 @@ async function analyzeContent(txt, imgFeatures, imgHash){
 
 
 async function callOnlineAIDetector(file){
-  // 1) Läs filen och rita den på en canvas (konverterar WEBP/HEIC osv till JPEG)
-  const img = new Image();
-  img.crossOrigin = "anonymous";
-
+  // 1) Läs fil -> dataURL
   const dataUrl = await new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result);
@@ -1698,13 +1695,15 @@ async function callOnlineAIDetector(file){
     reader.readAsDataURL(file);
   });
 
+  // 2) Ladda i <img>
+  const img = new Image();
   await new Promise((resolve, reject) => {
     img.onload = resolve;
     img.onerror = reject;
     img.src = dataUrl;
   });
 
-  // 2) Winston kräver minst 256x256 – se till att vi har det
+  // 3) Winston kräver minst 256x256 → skala upp vid behov
   const min = 256;
   const w0 = img.naturalWidth || img.width;
   const h0 = img.naturalHeight || img.height;
@@ -1716,36 +1715,52 @@ async function callOnlineAIDetector(file){
   const canvas = document.createElement("canvas");
   canvas.width = w;
   canvas.height = h;
-  const ctx = canvas.getContext("2d");
+  const ctx = canvas.getContext("2d", { willReadFrequently: false });
   ctx.drawImage(img, 0, 0, w, h);
 
-  // 3) Konvertera till JPEG (Winston tar PNG/JPEG)
+  // 4) Konvertera till JPEG (guard: toBlob kan bli null)
   const jpegBlob = await new Promise((resolve) => {
     canvas.toBlob((b) => resolve(b), "image/jpeg", 0.92);
   });
 
-  // 4) Skicka som “image” till din backend
+  // Fallback: om toBlob failar, skicka originalfilen
+  const blobToSend = jpegBlob || file;
+
+  // 5) Skicka multipart till backend
   const form = new FormData();
-  form.append("file", jpegBlob, "upload.jpg");
+
+  // Skicka båda fältnamn: "image" och "file" (vanligaste mismatchen bakom 400)
+  form.append("image", blobToSend, "upload.jpg");
+  form.append("file",  blobToSend, "upload.jpg");
 
   try{
-    const res = await fetch("https://signai-tamy.onrender.com/detect-image", {
+    const res = await fetch("https://signai-tamy.onrender.com", {
       method: "POST",
+      headers: { "Accept": "application/json" },
       body: form
     });
 
-    const data = await res.json().catch(() => null);
+    // Försök JSON först, annars text (så du ser backend/winston-felet)
+    const rawText = await res.text();
+    let data = null;
+    try { data = JSON.parse(rawText); } catch(_) {}
 
-    if (!res.ok) {
+    if(!res.ok){
+      const msg =
+        data?.label ||
+        data?.error ||
+        data?.message ||
+        rawText?.slice(0, 180) ||
+        ("HTTP error " + res.status);
+
       return {
         ai_score: 0.5,
-        label: data?.label ? ("Backend error: " + data.label) : ("Backend HTTP error: " + res.status),
+        label: "Backend/Winston error: " + msg,
         version: data?.version || "signai-backend",
-        raw: data
+        raw: data || rawText
       };
     }
 
-    // Plocka score säkert (0 ska vara ok)
     const aiScoreCandidate = data?.ai_score;
     const aiScore =
       (typeof aiScoreCandidate === "number" && Number.isFinite(aiScoreCandidate))
@@ -1765,6 +1780,7 @@ async function callOnlineAIDetector(file){
     };
   }
 }
+
 
 
 
