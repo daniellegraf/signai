@@ -22,7 +22,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 const WINSTON_API_KEY = process.env.WINSTONAI_API_KEY;
 
 // Winston MCP (JSON-RPC)
-const WINSTON_MCP_URL = "https://api.gowinston.ai/mcp";
+const WINSTON_MCP_URL = "https://api.gowinston.ai/mcp/v1";
 
 // Temp uploads (Render funkar med /tmp)
 const uploadDir = "/tmp/uploads";
