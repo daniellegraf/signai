@@ -1734,7 +1734,7 @@ async function callOnlineAIDetector(file){
   form.append("file",  blobToSend, "upload.jpg");
 
   try{
-    const res = await fetch("https://signai-tamy.onrender.com", {
+    const res = await fetch("https://signai-tamy.onrender.com/detect-image", {
       method: "POST",
       headers: { "Accept": "application/json" },
       body: form
