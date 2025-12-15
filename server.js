@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-import fetch from "node-fetch";
 
 dotenv.config();
 
@@ -17,7 +16,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 const WINSTON_API_KEY = process.env.WINSTONAI_API_KEY;
 
-// 🔴 REST endpoint (det som webappen använder)
+// ✅ REST endpoint (samma som webappen)
 const WINSTON_IMAGE_URL = "https://api.gowinston.ai/v2/image-detection";
 
 // temp uploads
@@ -41,7 +40,7 @@ async function callWinstonImageREST(imageUrl) {
   const resp = await fetch(WINSTON_IMAGE_URL, {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${WINSTON_API_KEY}`,
+      Authorization: `Bearer ${WINSTON_API_KEY}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -83,8 +82,7 @@ app.post("/detect-image", upload.single("image"), async (req, res) => {
         ? w.data.ai_probability
         : 0.5;
 
-    const label =
-      aiScore >= 0.5 ? "AI" : "Human";
+    const label = aiScore >= 0.5 ? "AI" : "Human";
 
     return res.json({
       ai_score: aiScore,
