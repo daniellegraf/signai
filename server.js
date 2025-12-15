@@ -16,8 +16,6 @@ app.use(express.json());
 const upload = multer({ storage: multer.memoryStorage() });
 
 const WINSTON_API_KEY = process.env.WINSTONAI_API_KEY;
-
-// ✅ Winston MCP endpoint
 const WINSTON_MCP_URL = "https://api.gowinston.ai/mcp/v1";
 
 // temp uploads
@@ -37,11 +35,9 @@ function makePublicUrl(req, filename) {
   return `${proto}://${host}/uploads/${filename}`;
 }
 
-/** Gör om Winston-värden till 0..1 eller null */
 function normalizeScore(x) {
   if (x === null || x === undefined) return null;
 
-  // String -> number, t.ex. "0.87", "87", "87%"
   if (typeof x === "string") {
     const cleaned = x.replace("%", "").trim();
     const n = parseFloat(cleaned);
@@ -51,54 +47,82 @@ function normalizeScore(x) {
 
   if (typeof x !== "number" || !Number.isFinite(x)) return null;
 
-  // 0..100 -> 0..1
   if (x > 1 && x <= 100) return x / 100;
-
-  // 0..1 ok
   if (x >= 0 && x <= 1) return x;
 
   return null;
 }
 
-/** Försök hitta en score i Winston-svaret (MCP kan variera) */
-function extractScore(obj) {
+// ✅ Plockar JSON från Winston-texten: "Full API Response : { ... }"
+function extractJsonFromWinstonText(text) {
+  if (!text || typeof text !== "string") return null;
+
+  const marker = "Full API Response";
+  const idx = text.indexOf(marker);
+  if (idx === -1) return null;
+
+  // hitta första { efter markern
+  const braceStart = text.indexOf("{", idx);
+  if (braceStart === -1) return null;
+
+  // hitta matchande } genom att räkna klamrar
+  let depth = 0;
+  for (let i = braceStart; i < text.length; i++) {
+    const ch = text[i];
+    if (ch === "{") depth++;
+    else if (ch === "}") depth--;
+    if (depth === 0) {
+      const jsonStr = text.slice(braceStart, i + 1);
+      try {
+        return JSON.parse(jsonStr);
+      } catch {
+        return null;
+      }
+    }
+  }
+  return null;
+}
+
+// ✅ Hämta ai_probability/human_probability ur antingen riktiga fält eller ur textens inbäddade JSON
+function extractWinstonResult(obj) {
   if (!obj || typeof obj !== "object") return null;
 
-  // vanliga nycklar
-  const candidates = [
-    obj.ai_probability,
-    obj.aiProbability,
-    obj.probability,
-    obj.score,
-    obj.aiScore,
-    obj.ai_score,
-    obj.ai,
-    obj.human_probability ? (1 - obj.human_probability) : null, // om de råkar ge "human_probability"
-  ];
+  // 1) om Winston redan ger riktiga fält (ibland gör den det)
+  const direct = {
+    ai_probability: obj.ai_probability,
+    human_probability: obj.human_probability,
+    score: obj.score,
+  };
 
-  for (const c of candidates) {
-    const s = normalizeScore(c);
-    if (s !== null) return s;
+  const ai1 = normalizeScore(direct.ai_probability);
+  const human1 = normalizeScore(direct.human_probability);
+
+  if (ai1 !== null || human1 !== null) {
+    return {
+      ai_probability: ai1,
+      human_probability: human1,
+      score: normalizeScore(direct.score),
+      raw: obj,
+    };
   }
 
-  // ibland ligger resultatet nested
-  if (obj.data) {
-    const s = extractScore(obj.data);
-    if (s !== null) return s;
-  }
-  if (obj.result) {
-    const s = extractScore(obj.result);
-    if (s !== null) return s;
-  }
-  if (obj.output) {
-    const s = extractScore(obj.output);
-    if (s !== null) return s;
+  // 2) Winston MCP verkar ge: data.content[0].text som innehåller JSON
+  const text = obj?.content?.[0]?.text;
+  const embedded = extractJsonFromWinstonText(text);
+
+  if (embedded) {
+    return {
+      ai_probability: normalizeScore(embedded.ai_probability),
+      human_probability: normalizeScore(embedded.human_probability),
+      score: normalizeScore(embedded.score),
+      raw: embedded,
+      embedded_text: text,
+    };
   }
 
   return null;
 }
 
-// ✅ Kallar Winston via MCP (JSON-RPC)
 async function callWinstonImage(imageUrl) {
   if (!WINSTON_API_KEY) {
     return {
@@ -153,8 +177,6 @@ app.post("/detect-image", upload.single("image"), async (req, res) => {
     const imageUrl = makePublicUrl(req, filename);
 
     const w = await callWinstonImage(imageUrl);
-
-    // logga exakt vad Winston svarar
     console.log("Winston response:", JSON.stringify(w, null, 2));
 
     if (!w.ok) {
@@ -167,23 +189,27 @@ app.post("/detect-image", upload.single("image"), async (req, res) => {
       });
     }
 
-    // ✅ plocka ut score robust
-    const extracted = extractScore(w.data);
+    // ✅ Här gör vi “rätt”: ta ut riktiga siffror ur text/JSON
+    const parsed = extractWinstonResult(w.data);
 
-    // Om vi inte hittar score → var ärlig: Unknown (inte fejka 50%)
-    if (extracted === null) {
+    if (!parsed || (parsed.ai_probability === null && parsed.human_probability === null)) {
       return res.json({
         ai_score: 0.5,
         label: "Unknown",
         image_url: imageUrl,
         raw: w.data,
-        note: "Could not extract a numeric score from Winston response.",
+        note: "Could not parse Winston result (no numeric probabilities found).",
       });
     }
 
-    const aiScore = extracted;
+    // Välj AI-score: helst ai_probability, annars 1-human_probability
+    let aiScore = parsed.ai_probability;
+    if (aiScore === null && parsed.human_probability !== null) {
+      aiScore = 1 - parsed.human_probability;
+    }
+    if (aiScore === null) aiScore = 0.5;
 
-    // bättre trösklar än “>=0.5 är AI”
+    // Labels med trösklar
     let label = "Mixed";
     if (aiScore >= 0.65) label = "AI";
     else if (aiScore <= 0.35) label = "Human";
@@ -192,6 +218,17 @@ app.post("/detect-image", upload.single("image"), async (req, res) => {
       ai_score: aiScore,
       label,
       image_url: imageUrl,
+      // skicka tillbaka det rena parsed-resultatet också (nice för debug)
+      parsed: {
+        ai_probability: parsed.ai_probability,
+        human_probability: parsed.human_probability,
+        score: parsed.score,
+        version: parsed.raw?.version,
+        mime_type: parsed.raw?.mime_type,
+        credits_used: parsed.raw?.credits_used,
+        credits_remaining: parsed.raw?.credits_remaining,
+        ai_watermark_detected: parsed.raw?.ai_watermark_detected,
+      },
       raw: w.data,
     });
   } catch (err) {
