@@ -1,3 +1,4 @@
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -7,7 +8,8 @@
 :root{
   --bg:#050a14;--panel:#0f1c38;--panel2:#0b152b;--glass:rgba(14,24,48,.72);
   --text:#eaf2ff;--muted:#a6b7ce;--border:#1a2947;
-  --accent:#22b7ff;--accent2:#22e0d8;--ok:#16a34a;--bad:#ef4444;--expired:#3b82f6
+  --accent:#22b7ff;--accent2:#22e0d8;
+  --ok:#16a34a;--bad:#ef4444;--warn:#f59e0b;--expired:#3b82f6
 }
 *{box-sizing:border-box}html,body{height:100%}
 body{
@@ -17,6 +19,7 @@ body{
   color:var(--text)
 }
 .wrap{max-width:1040px;margin:0 auto;padding:16px 18px}
+
 /* HEADER */
 header{
   position:sticky;top:0;
@@ -33,28 +36,25 @@ header{
 .brand-logo{
   height:44px;width:44px;border-radius:10px;
   border:1px solid var(--border);
-  background:radial-gradient(circle at 30% 0%,#22b7ff22,transparent 60%),linear-gradient(180deg,#0a1530,#071024);
+  background:
+    radial-gradient(circle at 30% 0%,#22b7ff22,transparent 60%),
+    linear-gradient(180deg,#0a1530,#071024);
   display:grid;place-items:center;overflow:hidden;
 }
 .brand-logo img{width:100%;height:100%;object-fit:cover}
-.brand h1{
-  margin:0;font-size:18px;font-weight:800;letter-spacing:.2px
-}
-.brand .tag{
-  margin:0;font-size:12px;color:var(--muted)
-}
+.brand h1{margin:0;font-size:18px;font-weight:800;letter-spacing:.2px}
+.brand .tag{margin:0;font-size:12px;color:var(--muted)}
 
 /* TOP NAV */
 .nav{
   display:flex;gap:6px;flex-wrap:wrap;justify-content:center;
-  padding:4px 6px;
-  border-radius:999px;
+  padding:4px 6px;border-radius:999px;
   background:radial-gradient(circle at 0 0,#22b7ff11,transparent 60%);
 }
 .tab{
   border-radius:999px;border:1px solid var(--border);
-  padding:7px 12px;font-weight:700;
-  cursor:pointer;background:var(--panel2);color:var(--text);
+  padding:7px 12px;font-weight:700;cursor:pointer;
+  background:var(--panel2);color:var(--text);
   transition:filter .2s,background .2s,transform .12s,border-color .2s;
   font-size:13px;display:flex;align-items:center;gap:6px;
 }
@@ -67,24 +67,14 @@ header{
 }
 
 /* STEPPER & PAGER */
-.stepper{
-  display:flex;gap:8px;justify-content:center;
-  flex-wrap:wrap;margin:10px 0 6px
-}
+.stepper{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:10px 0 6px}
 .step{
   display:flex;gap:6px;align-items:center;
-  border:1px solid #26406c;background:#0b152b;
-  color:#bcd0ea;border-radius:999px;
-  padding:6px 11px;font-weight:700;font-size:12px
+  border:1px solid #26406c;background:#0b152b;color:#bcd0ea;
+  border-radius:999px;padding:6px 11px;font-weight:700;font-size:12px
 }
-.step.active{
-  background:linear-gradient(90deg,var(--accent),var(--accent2));
-  color:#062630;border-color:transparent
-}
-.pager{
-  display:flex;justify-content:space-between;
-  align-items:center;gap:12px;margin-top:8px
-}
+.step.active{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#062630;border-color:transparent}
+.pager{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:8px}
 .pill{
   border:1px solid var(--border);background:#0b152b;color:#cfe2ff;
   border-radius:999px;padding:8px 12px;font-weight:700;
@@ -103,122 +93,37 @@ header{
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 
 /* DASHBOARD */
-.dashboard-grid{
-  display:grid;
-  grid-template-columns:2.2fr 1.8fr;
-  gap:12px;
-}
-@media(max-width:900px){
-  .dashboard-grid{
-    grid-template-columns:1fr;
-  }
-}
-.creator-dashboard{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-.creator-dashboard-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-}
-.creator-dashboard-title{
-  font-size:14px;
-  font-weight:800;
-}
-.creator-dashboard-pillrow{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin-top:4px;
-}
+.dashboard-grid{display:grid;grid-template-columns:2.2fr 1.8fr;gap:12px}
+@media(max-width:900px){.dashboard-grid{grid-template-columns:1fr}}
+.creator-dashboard{display:flex;flex-direction:column;gap:10px}
+.creator-dashboard-header{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.creator-dashboard-title{font-size:14px;font-weight:800}
+.creator-dashboard-pillrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
 .cd-pill{
-  font-size:11px;
-  padding:4px 9px;
-  border-radius:999px;
-  border:1px solid #1f2a3f;
-  background:#050b18;
-  color:#cdd9f7;
+  font-size:11px;padding:4px 9px;border-radius:999px;
+  border:1px solid #1f2a3f;background:#050b18;color:#cdd9f7;
 }
-.cd-pill span{
-  opacity:.7;
-}
-.creator-dashboard-grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:8px;
-  margin-top:6px;
-}
-@media (max-width:720px){
-  .creator-dashboard-grid{
-    grid-template-columns:minmax(0,1fr);
-  }
-}
-.creator-stat-label{
-  font-size:11px;
-  color:#8ea2c6;
-  text-transform:uppercase;
-  letter-spacing:.06em;
-}
-.creator-stat-value{
-  font-size:12.5px;
-  font-weight:700;
-  color:#e5f1ff;
-}
+.cd-pill span{opacity:.7}
+.creator-dashboard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:6px}
+@media (max-width:720px){.creator-dashboard-grid{grid-template-columns:minmax(0,1fr)}}
+.creator-stat-label{font-size:11px;color:#8ea2c6;text-transform:uppercase;letter-spacing:.06em}
+.creator-stat-value{font-size:12.5px;font-weight:700;color:#e5f1ff}
 
 /* Latest badge / verification list */
-.badge-summary{
-  font-size:12.8px;
-  color:#d1e4ff;
-  line-height:1.45;
-}
-.badge-summary code{
-  font-family:ui-monospace,Consolas,monospace;
-  font-size:11.6px;
-}
-.table-mini{
-  width:100%;
-  border-collapse:collapse;
-  font-size:12px;
-  margin-top:4px;
-}
-.table-mini th,
-.table-mini td{
-  padding:4px 6px;
-  border-bottom:1px solid #1b2742;
-  text-align:left;
-}
-.table-mini th{
-  color:#9fb0c4;
-  font-weight:600;
-}
-.table-mini tr:last-child td{
-  border-bottom:none;
-}
+.badge-summary{font-size:12.8px;color:#d1e4ff;line-height:1.45}
+.badge-summary code{font-family:ui-monospace,Consolas,monospace;font-size:11.6px}
+.table-mini{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px}
+.table-mini th,.table-mini td{padding:4px 6px;border-bottom:1px solid #1b2742;text-align:left}
+.table-mini th{color:#9fb0c4;font-weight:600}
+.table-mini tr:last-child td{border-bottom:none}
 .status-pill{
-  display:inline-block;
-  padding:2px 7px;
-  border-radius:999px;
-  font-size:11px;
-  font-weight:700;
+  display:inline-block;padding:2px 7px;border-radius:999px;
+  font-size:11px;font-weight:700
 }
-.status-ok{
-  background:rgba(22,163,74,.18);
-  color:#bbf7d0;
-  border:1px solid rgba(22,163,74,.6);
-}
-.status-fail{
-  background:rgba(239,68,68,.16);
-  color:#fecaca;
-  border:1px solid rgba(239,68,68,.7);
-}
-.status-expired{
-  background:rgba(59,130,246,.16);
-  color:#bfdbfe;
-  border:1px solid rgba(59,130,246,.8);
-}
+.status-ok{background:rgba(22,163,74,.18);color:#bbf7d0;border:1px solid rgba(22,163,74,.6)}
+.status-fail{background:rgba(239,68,68,.16);color:#fecaca;border:1px solid rgba(239,68,68,.7)}
+.status-expired{background:rgba(59,130,246,.16);color:#bfdbfe;border:1px solid rgba(59,130,246,.8)}
+.status-warn{background:rgba(245,158,11,.14);color:#fde68a;border:1px solid rgba(245,158,11,.7)}
 
 /* INPUTS */
 .input,textarea{
@@ -257,6 +162,7 @@ pre{
 .resultBox.ok{border-color:var(--ok);box-shadow:0 0 0 3px rgba(22,163,74,.16)}
 .resultBox.bad{border-color:var(--bad);box-shadow:0 0 0 3px rgba(239,68,68,.16)}
 .resultBox.expired{border-color:var(--expired);box-shadow:0 0 0 3px rgba(59,130,246,.16)}
+.resultBox.warn{border-color:var(--warn);box-shadow:0 0 0 3px rgba(245,158,11,.14)}
 .badgeFrame{display:flex;justify-content:center;align-items:center;min-height:200px}
 .badgeClickableHint{font-size:11px;color:#9fb0c4;text-align:center;margin-top:6px;opacity:.8}
 #b_preview.clickable{cursor:pointer;outline:2px solid rgba(34,183,255,.35);outline-offset:2px}
@@ -266,62 +172,27 @@ pre{
 .subStatus{font-size:12.6px;color:#a2b6d1}
 
 /* IMAGE PREVIEW (TRACE TAB) */
-#c_thumb{
-  display:block;max-width:260px;
-  border:1px solid var(--border);border-radius:10px;margin-top:8px
-}
+#c_thumb{display:block;max-width:260px;border:1px solid var(--border);border-radius:10px;margin-top:8px}
 .hide{display:none}
 
-/* FOOTER */
-footer{
-  margin:18px 0 28px;color:var(--muted);
-  font-size:12.5px;text-align:center
-}
-
 /* SIGNAL BREAKDOWN LIST */
-.check-list{
-  margin-top:10px;
-  border-top:1px solid #1a2947;
-  padding-top:10px;
-  font-size:12.6px;
-}
-.check-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin:3px 0;
-}
+.check-list{margin-top:10px;border-top:1px solid #1a2947;padding-top:10px;font-size:12.6px}
+.check-row{display:flex;align-items:center;justify-content:space-between;margin:3px 0}
 .check-label{color:#a2b6d1}
 .check-pill{
-  min-width:42px;
-  text-align:center;
-  padding:2px 8px;
-  border-radius:999px;
-  font-size:11px;
-  font-weight:700;
+  min-width:42px;text-align:center;padding:2px 8px;border-radius:999px;
+  font-size:11px;font-weight:700
 }
-.check-ok{
-  color:#bbf7d0;
-  background:rgba(22,163,74,.18);
-  border:1px solid rgba(22,163,74,.6);
-}
-.check-fail{
-  color:#fecaca;
-  background:rgba(239,68,68,.16);
-  border:1px solid rgba(239,68,68,.7);
-}
-.check-na{
-  color:#e5e7eb;
-  background:rgba(148,163,184,.16);
-  border:1px solid rgba(148,163,184,.6);
-}
-.check-legend{
-  margin-top:8px;
-  font-size:12px;
-  color:#94a3b8;
-}
+.check-ok{color:#bbf7d0;background:rgba(22,163,74,.18);border:1px solid rgba(22,163,74,.6)}
+.check-fail{color:#fecaca;background:rgba(239,68,68,.16);border:1px solid rgba(239,68,68,.7)}
+.check-na{color:#e5e7eb;background:rgba(148,163,184,.16);border:1px solid rgba(148,163,184,.6)}
+.check-legend{margin-top:8px;font-size:12px;color:#94a3b8}
+
+/* FOOTER */
+footer{margin:18px 0 28px;color:var(--muted);font-size:12.5px;text-align:center}
 </style>
 </head>
+
 <body>
 <header>
   <div class="wrap header-inner">
@@ -331,7 +202,7 @@ footer{
       </div>
       <div>
         <h1>SignAi</h1>
-        <p class="tag">Alpha 1.0</p>
+        <p class="tag">Alpha 1.1</p>
       </div>
     </div>
     <nav class="nav">
@@ -358,7 +229,6 @@ footer{
 </header>
 
 <div class="wrap">
-  <!-- STEPPER -->
   <div class="stepper">
     <div class="step" id="st1">0. Vault</div>
     <div class="step" id="st2">1. Keys</div>
@@ -367,7 +237,6 @@ footer{
     <div class="step" id="st5">4. TRACE & Verify</div>
   </div>
 
-  <!-- PAGER -->
   <div class="pager">
     <button id="btnPrev" class="pill" onclick="goPrev()">← Previous</button>
     <div></div>
@@ -377,7 +246,6 @@ footer{
   <!-- TAB: DASHBOARD -->
   <section id="tab-dashboard">
     <div class="dashboard-grid">
-      <!-- Left: Creator overview -->
       <div class="card creator-dashboard">
         <div class="creator-dashboard-header">
           <div class="creator-dashboard-title">Creator dashboard</div>
@@ -407,7 +275,7 @@ footer{
           </div>
         </div>
       </div>
-      <!-- Right: Quick actions -->
+
       <div class="card">
         <div class="label"><b>Quick actions</b></div>
         <div class="row" style="margin-bottom:8px">
@@ -432,7 +300,6 @@ footer{
       </div>
     </div>
 
-    <!-- Latest badge -->
     <div class="card">
       <div class="label"><b>Latest badge</b></div>
       <div id="dash_latest_badge" class="badge-summary">
@@ -440,7 +307,6 @@ footer{
       </div>
     </div>
 
-    <!-- Recent verifications -->
     <div class="card">
       <div class="label"><b>Recent verifications</b></div>
       <div id="dash_verifications" class="helper">
@@ -465,14 +331,7 @@ footer{
         <button class="btn primary" onclick="createKey()">Create keypair</button>
         <button class="btn" onclick="downloadPub()">Download pub</button>
         <button class="btn" onclick="exportPriv()">Export private</button>
-        <input
-          id="k_import_file"
-          type="file"
-          accept=".json"
-          class="input"
-          style="max-width:320px"
-          onchange="importPriv(event)"
-        >
+        <input id="k_import_file" type="file" accept=".json" class="input" style="max-width:320px" onchange="importPriv(event)">
       </div>
       <div class="label">Status</div>
       <pre id="k_status">No key yet.</pre>
@@ -489,12 +348,7 @@ footer{
 
     <div class="card">
       <div class="label"><b>Step 2 – Mindprint (your human pattern)</b></div>
-      <textarea
-        id="h_text"
-        placeholder="Type 1–2 sentences with your own fingers…"
-        onkeydown="logKey(event)"
-        oninput="updateMindprint()"
-      ></textarea>
+      <textarea id="h_text" placeholder="Type 1–2 sentences with your own fingers…" onkeydown="logKey(event)" oninput="updateMindprint()"></textarea>
       <div class="helper" id="h_status">Waiting for typing…</div>
     </div>
   </section>
@@ -507,13 +361,7 @@ footer{
       <textarea id="c_text" placeholder="Write/paste content…"></textarea>
 
       <div class="label" style="margin-top:8px">Attach image (optional)</div>
-      <input
-        id="c_image"
-        type="file"
-        accept="image/*"
-        class="input"
-        onchange="handleImage(event)"
-      >
+      <input id="c_image" type="file" accept="image/*" class="input" onchange="handleImage(event)">
       <img id="c_thumb" class="hide" alt="Preview">
 
       <div class="label" style="margin-top:10px"><b>Step 3b – Content Origin (Winston AI – image only)</b></div>
@@ -549,17 +397,13 @@ footer{
     <div class="card">
       <div class="label"><b>Step 5 – Verify</b></div>
       <div class="row" style="margin-bottom:10px">
-        <button class="btn primary" onclick="quickVerifyCurrent()">
-          Verify my latest badge
-        </button>
+        <button class="btn primary" onclick="quickVerifyCurrent()">Verify my latest badge</button>
       </div>
 
       <div class="label">Upload badge (.svg)</div>
       <input id="v_file" type="file" accept=".svg,image/svg+xml" class="input">
 
-      <div class="label" style="margin-top:8px">
-        If the badge used an image: upload the same image here
-      </div>
+      <div class="label" style="margin-top:8px">If the badge used an image: upload the same image here</div>
       <input id="v_img" type="file" accept="image/*" class="input">
 
       <div style="margin-top:10px">
@@ -569,12 +413,9 @@ footer{
       <div class="label" style="margin-top:12px">Result</div>
       <div id="v_box" class="resultBox">
         <div id="v_human_status" class="bigStatus">No verification yet.</div>
-        <div id="v_human_sub" class="subStatus">
-          Click badge or upload a TRACE SVG.
-        </div>
+        <div id="v_human_sub" class="subStatus">Click badge or upload a TRACE SVG.</div>
       </div>
 
-      <!-- SIGNAL BREAKDOWN PANEL -->
       <div id="v_checks" class="check-list hide">
         <div class="bigStatus" style="margin-bottom:4px">Signal breakdown</div>
 
@@ -599,9 +440,7 @@ footer{
           <span id="chk_img" class="check-pill check-na">N/A</span>
         </div>
 
-        <div id="chk_summary" class="check-legend">
-          Signal-score: –/5. No checks run yet.
-        </div>
+        <div id="chk_summary" class="check-legend">Signal-score: –/5. No checks run yet.</div>
       </div>
     </div>
   </section>
@@ -653,9 +492,9 @@ footer{
         <li><b>TRACE badge</b> – When you sign content, SignAi:
           <ul style="margin-left:16px">
             <li>Hashes the content and optional image</li>
-            <li>Runs <b>ORIGIN-X</b> Backend-source (AI-detector X)</li>
+            <li>Runs backend image origin detector (Winston AI)</li>
             <li>Bundles everything into a signed <code>trace-7.0</code> token</li>
-            <li>Renders a badge + glyph that encodes the payload</li>
+            <li>Renders a deterministic helix glyph (“DNA”) from payload</li>
           </ul>
         </li>
         <li><b>Verify</b> – Anyone can load the badge and re-check:
@@ -668,8 +507,6 @@ footer{
           </ul>
         </li>
       </ol>
-      <div class="helper" style="margin-top:8px">
-      </div>
     </div>
 
     <div class="card">
@@ -682,94 +519,60 @@ footer{
 
 • creator_id:
   – &lt;creator_id&gt; = "sha256:" + SHA-256(JSON(publicKeyObject))
-  – Deterministic and device-agnostic; same key → same creator_id
 
 • Mindprint:
   – Logs keypress timestamps while you type
-  – Computes mean & variance of intervals, flatness, speed, etc.
-  – Hashes these features → mind_hash (no raw timing stored)
+  – Hashes features → mind_hash (no raw timing stored)
 
-• Content Origin (ORIGIN-X hybrid, alpha):
-  – Text: light heuristic only (length, punctuation ratio)
-  – Image: dual-layer heuristic
-      · legacy: colorfulness, brightness, neighbor texture, per-channel variance
-      · ORIGIN-X: grayscale noise residuals (Laplacian), energy and structure
-  – Produces a 0–1 score:
-      · &lt; 0.45 → Human-leaning (conservative)
-      · 0.45–0.75 → Mixed / uncertain
-      · &gt; 0.75 → AI-leaning (strong synthetic fingerprints)
-  
-    The scoring is biased to <b>avoid false AI flags</b> on real camera images.
-(AI-backend source from Winston-Ai Image Detector) 
-• TRACE token (trace-7.0):
-  {
-    version: "trace-7.0",
-    scheme:  "signai-trace",
-    content_type: "text/plain",
-    content_hash: SHA-256(text),
-    created_at:   iso8601,
-    metadata: {
-      creator_id,
-      mindprint: { mind_hash },
-      image_hash: (optional),
-      content_origin: {
-        score, label,
-        text:  (light heuristic),
-        image: (origin-x hybrid snapshot)
-      },
-      session: { issued_at, expires_in, nonce }
-    },
-    proof: {
-      alg:     "Ed25519",
-      edPublic,
-      sig:     base64url(Ed25519_signature_over_canonical_payload)
-    }
-  }
+• Content Origin (alpha):
+  – Image: Winston AI via backend
+  – Text: not scanned here (signed only)
 
-• Glyph:
-  – Seed = content_hash + image_hash + creator_id
-  – Seed → SHA-256 → hex pattern
-  – Hex pattern drives:
-      · 4×4 grid of animated circles
-      · palette (depends on content origin score)
-      · rotation and pulse timings
-  – Always the same for the same payload → visual “DNA” of the badge.
+• ORIGIN tiers (used everywhere):
+  – score &lt; 0.35  → HUMAN
+  – 0.35–0.65     → MIXED
+  – score &gt; 0.65  → AI
       </pre>
     </div>
   </section>
 
   <footer class="helper">
-    SignAi © 2025 — HOP 7.0 Alpha • All offline • WebCrypto Ed25519
+    SignAi © 2025 — HOP 7.0 Alpha • Local-first • WebCrypto Ed25519
   </footer>
 </div>
 
 <script>
+/* =========================================================
+   SIGN_AI FULL BUILD – ORIGIN INTEGRATED (Alpha 1.1)
+   ========================================================= */
+
 /* ==== STORAGE WRAPPER ==== */
 let MEMORY_STORAGE = {};
 let STORAGE_WORKS = true;
-
-try {
-  localStorage.setItem("__signai_test", "1");
-  localStorage.removeItem("__signai_test");
-} catch (e) {
-  STORAGE_WORKS = false;
-  console.warn("localStorage BLOCKED – using in-memory storage instead.");
-}
+try { localStorage.setItem("__signai_test", "1"); localStorage.removeItem("__signai_test"); }
+catch (e) { STORAGE_WORKS = false; console.warn("localStorage BLOCKED – using in-memory storage instead."); }
 
 const store = {
-  set(key, val) {
-    if (STORAGE_WORKS) localStorage.setItem(key, val);
-    else MEMORY_STORAGE[key] = val;
+  set(key, val) { if (STORAGE_WORKS) localStorage.setItem(key, val); else MEMORY_STORAGE[key] = val; },
+  get(key) { if (STORAGE_WORKS) return localStorage.getItem(key); return Object.prototype.hasOwnProperty.call(MEMORY_STORAGE, key) ? MEMORY_STORAGE[key] : null; },
+  remove(key) { if (STORAGE_WORKS) localStorage.removeItem(key); else delete MEMORY_STORAGE[key]; }
+};
+
+/* === CONSTANTS === */
+const ORIGIN = {
+  HUMAN_MAX: 0.35,
+  AI_MIN: 0.65,
+  TIER(score){
+    const s = (typeof score === 'number' && Number.isFinite(score)) ? score : null;
+    if(s === null) return { tier:'unknown', label:'Unknown', dot:'#94a3b8' };
+    if(s < ORIGIN.HUMAN_MAX) return { tier:'human', label:'HUMAN', dot:'#16a34a' };
+    if(s > ORIGIN.AI_MIN)    return { tier:'ai',    label:'AI',    dot:'#ef4444' };
+    return { tier:'mixed', label:'MIXED', dot:'#f59e0b' };
   },
-  get(key) {
-    if (STORAGE_WORKS) return localStorage.getItem(key);
-    return Object.prototype.hasOwnProperty.call(MEMORY_STORAGE, key)
-      ? MEMORY_STORAGE[key]
-      : null;
-  },
-  remove(key) {
-    if (STORAGE_WORKS) localStorage.removeItem(key);
-    else delete MEMORY_STORAGE[key];
+  UI(label, score){
+    const t = ORIGIN.TIER(score);
+    const pretty = (typeof score === 'number' && Number.isFinite(score)) ? (score*100).toFixed(1)+'%' : 'n/a';
+    return { ...t, pretty, full: `${label || t.label} (${pretty})` };
   }
 };
 
@@ -853,58 +656,20 @@ function switchTab(name, btn){
 
   [st1,st2,st3,st4,st5].forEach(el=>el && el.classList.remove('active'));
 
-  if(name === 'dashboard'){
-    [st1,st2,st3,st4,st5].forEach(el=>el && el.classList.add('active'));
-  }
-  if(name === 'signai'){
-    st1 && st1.classList.add('active');
-    st2 && st2.classList.add('active');
-    st3 && st3.classList.add('active');
-  }
-  if(name === 'trace'){
-    st1 && st1.classList.add('active');
-    st2 && st2.classList.add('active');
-    st3 && st3.classList.add('active');
-    st4 && st4.classList.add('active');
-  }
-  if(name === 'verify' || name === 'vault' || name === 'about'){
-    st1 && st1.classList.add('active');
-    st2 && st2.classList.add('active');
-    st3 && st3.classList.add('active');
-    st4 && st4.classList.add('active');
-    st5 && st5.classList.add('active');
-  }
+  if(name === 'dashboard'){ [st1,st2,st3,st4,st5].forEach(el=>el && el.classList.add('active')); }
+  if(name === 'signai'){ st1&&st1.classList.add('active'); st2&&st2.classList.add('active'); st3&&st3.classList.add('active'); }
+  if(name === 'trace'){ st1&&st1.classList.add('active'); st2&&st2.classList.add('active'); st3&&st3.classList.add('active'); st4&&st4.classList.add('active'); }
+  if(name === 'verify' || name === 'vault' || name === 'about'){ st1&&st1.classList.add('active'); st2&&st2.classList.add('active'); st3&&st3.classList.add('active'); st4&&st4.classList.add('active'); st5&&st5.classList.add('active'); }
 
   updatePager();
 }
-
-function goNext(){
-  const i = tabOrder.indexOf(currentTab);
-  if(i < tabOrder.length-1){
-    const nextTab = tabOrder[i+1];
-    switchTab(nextTab, document.getElementById('tb_'+nextTab));
-  }
-}
-function goPrev(){
-  const i = tabOrder.indexOf(currentTab);
-  if(i > 0){
-    const prevTab = tabOrder[i-1];
-    switchTab(prevTab, document.getElementById('tb_'+prevTab));
-  }
-}
-function updatePager(){
-  const i = tabOrder.indexOf(currentTab);
-  if(btnPrev) btnPrev.disabled = (i<=0);
-  if(btnNext) btnNext.disabled = (i>=tabOrder.length-1);
-}
+function goNext(){ const i = tabOrder.indexOf(currentTab); if(i < tabOrder.length-1){ const n = tabOrder[i+1]; switchTab(n, document.getElementById('tb_'+n)); } }
+function goPrev(){ const i = tabOrder.indexOf(currentTab); if(i > 0){ const p = tabOrder[i-1]; switchTab(p, document.getElementById('tb_'+p)); } }
+function updatePager(){ const i = tabOrder.indexOf(currentTab); if(btnPrev) btnPrev.disabled = (i<=0); if(btnNext) btnNext.disabled = (i>=tabOrder.length-1); }
 switchTab('dashboard', document.getElementById('tb_dashboard'));
 
 /* SignAi logo default (1.png) */
-function applyLogos(){
-  if(signai_logo && !signai_logo.getAttribute('src')){
-    signai_logo.src = '1.png';
-  }
-}
+function applyLogos(){ if(signai_logo && !signai_logo.getAttribute('src')) signai_logo.src = '1.png'; }
 applyLogos();
 
 /* === ENCODER === */
@@ -926,98 +691,44 @@ function fromB64u(s){
 
 /* === SHA-256 via WebCrypto === */
 async function sha256HexBuffer(buf){
-  if(!window.crypto || !crypto.subtle){
-    throw new Error('WebCrypto (crypto.subtle) not supported in this environment.');
-  }
+  if(!window.crypto || !crypto.subtle) throw new Error('WebCrypto (crypto.subtle) not supported in this environment.');
   const hashBuf = await crypto.subtle.digest('SHA-256', buf);
   const u = new Uint8Array(hashBuf);
   return [...u].map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-async function sha256Hex(text){
-  return sha256HexBuffer(enc.encode(text));
-}
+async function sha256Hex(text){ return sha256HexBuffer(enc.encode(text)); }
 
 /* === ED25519 via WebCrypto === */
 async function kpGenerate(){
-  if(!window.crypto || !crypto.subtle){
-    throw new Error('WebCrypto (crypto.subtle) not supported in this environment.');
-  }
-  const keyPair = await crypto.subtle.generateKey(
-    { name: 'Ed25519' },
-    true,
-    ['sign','verify']
-  );
+  if(!window.crypto || !crypto.subtle) throw new Error('WebCrypto (crypto.subtle) not supported in this environment.');
+  const keyPair = await crypto.subtle.generateKey({ name: 'Ed25519' }, true, ['sign','verify']);
   const pubRaw   = await crypto.subtle.exportKey('raw',   keyPair.publicKey);
   const privPkcs = await crypto.subtle.exportKey('pkcs8', keyPair.privateKey);
-  return {
-    publicKey: new Uint8Array(pubRaw),
-    privateKey: new Uint8Array(privPkcs)
-  };
+  return { publicKey: new Uint8Array(pubRaw), privateKey: new Uint8Array(privPkcs) };
 }
-
 async function getStoredPrivateKey(){
   const raw = store.get('sa_priv');
   if(!raw) return null;
   const j = JSON.parse(raw);
   if(!j.edSecret) return null;
   const pkcs8Bytes = fromB64u(j.edSecret);
-  return crypto.subtle.importKey(
-    'pkcs8',
-    pkcs8Bytes,
-    { name: 'Ed25519' },
-    false,
-    ['sign']
-  );
+  return crypto.subtle.importKey('pkcs8', pkcs8Bytes, { name: 'Ed25519' }, false, ['sign']);
 }
-
-async function getStoredPublicKey(){
-  const raw = store.get('sa_pub');
-  if(!raw) return null;
-  const j = JSON.parse(raw);
-  if(!j.edPublic) return null;
-  const pubBytes = fromB64u(j.edPublic);
-  return crypto.subtle.importKey(
-    'raw',
-    pubBytes,
-    { name: 'Ed25519' },
-    false,
-    ['verify']
-  );
-}
-
 async function signBytesEd25519(msgBytes){
   const privKey = await getStoredPrivateKey();
   if(!privKey) throw new Error('No private ED25519 key found.');
-  const sigBuf = await crypto.subtle.sign(
-    { name: 'Ed25519' },
-    privKey,
-    msgBytes
-  );
+  const sigBuf = await crypto.subtle.sign({ name: 'Ed25519' }, privKey, msgBytes);
   return new Uint8Array(sigBuf);
 }
-
 async function verifyBytesEd25519(msgBytes, sigB64u, pubB64u){
   const sigBytes = fromB64u(sigB64u);
   const pubBytes = fromB64u(pubB64u);
-  const pubKey = await crypto.subtle.importKey(
-    'raw',
-    pubBytes,
-    { name: 'Ed25519' },
-    false,
-    ['verify']
-  );
-  return crypto.subtle.verify(
-    { name: 'Ed25519' },
-    pubKey,
-    sigBytes,
-    msgBytes
-  );
+  const pubKey = await crypto.subtle.importKey('raw', pubBytes, { name: 'Ed25519' }, false, ['verify']);
+  return crypto.subtle.verify({ name: 'Ed25519' }, pubKey, sigBytes, msgBytes);
 }
 
 /* === KEY MGMT === */
-function setKeyStatus(msg){
-  if(k_status) k_status.textContent = msg;
-}
+function setKeyStatus(msg){ if(k_status) k_status.textContent = msg; }
 
 async function createKey(){
   try{
@@ -1027,7 +738,6 @@ async function createKey(){
       alert('Set and unlock your BIO-ID Vault password first (Vault tab) before creating keys.');
       return;
     }
-
     const kp = await kpGenerate();
     store.set('sa_priv', JSON.stringify({ edSecret: b64u(kp.privateKey) }));
     store.set('sa_pub',  JSON.stringify({ edPublic: b64u(kp.publicKey) }));
@@ -1079,7 +789,6 @@ function importPriv(e){
     }
   });
 }
-
 function updateKeyDisplay(){
   const pubEl = document.getElementById('k_pub');
   const privEl = document.getElementById('k_priv');
@@ -1090,15 +799,9 @@ function updateKeyDisplay(){
 
   if(pubEl){
     if(pubRaw){
-      try{
-        const j = JSON.parse(pubRaw);
-        pubEl.textContent = j.edPublic || '(unknown format)';
-      }catch(e){
-        pubEl.textContent = '(error reading public key)';
-      }
-    }else{
-      pubEl.textContent = '(none)';
-    }
+      try{ pubEl.textContent = JSON.parse(pubRaw).edPublic || '(unknown format)'; }
+      catch(_e){ pubEl.textContent = '(error reading public key)'; }
+    } else pubEl.textContent = '(none)';
   }
 
   if(privEl){
@@ -1115,7 +818,6 @@ function updateKeyDisplay(){
     }
   }
 }
-
 function togglePriv(){
   const privEl = document.getElementById('k_priv');
   const btn    = document.getElementById('btnTogglePriv');
@@ -1123,12 +825,7 @@ function togglePriv(){
 
   const real  = privEl.dataset.real || '';
   const shown = privEl.dataset.shown === '1';
-
-  if(!real){
-    privEl.textContent = '(none)';
-    btn.disabled = true;
-    return;
-  }
+  if(!real){ privEl.textContent = '(none)'; btn.disabled = true; return; }
 
   if(shown){
     privEl.textContent = '(hidden)';
@@ -1143,17 +840,13 @@ function togglePriv(){
 
 /* === MINDPRINT v2 === */
 let h_log = [];
-function logKey(e){
-  h_log.push({ t: performance.now(), k: e.key });
-}
+function logKey(e){ h_log.push({ t: performance.now(), k: e.key }); }
 function computeMindprint(){
   if(h_log.length < 8 || !h_text) return null;
 
   const ts = h_log.map(x=>x.t);
   const dt = [];
-  for(let i=1;i<ts.length;i++){
-    dt.push(ts[i]-ts[i-1]);
-  }
+  for(let i=1;i<ts.length;i++) dt.push(ts[i]-ts[i-1]);
   if(dt.length === 0) return null;
 
   const mean = dt.reduce((a,b)=>a+b,0)/dt.length;
@@ -1173,10 +866,10 @@ function computeMindprint(){
     version: 'mp-v2',
     meanInterval: mean,
     sdInterval: sd,
-    flatRatio: flatRatio,
+    flatRatio,
     totalDurationMs: totalDuration,
     length: textLen,
-    charsPerSec: charsPerSec,
+    charsPerSec,
     backspaceFreq: backspaces / Math.max(1,textLen),
     spaceFreq: spaces / Math.max(1,textLen),
     enterCount: enters
@@ -1187,10 +880,7 @@ function updateMindprint(){
   if(!features) return;
 
   sha256Hex(JSON.stringify(features)).then(h=>{
-    store.set('mindprint', JSON.stringify({
-      mind_hash: h,
-      created_at: new Date().toISOString()
-    }));
+    store.set('mindprint', JSON.stringify({ mind_hash: h, created_at: new Date().toISOString() }));
     if(h_status) h_status.textContent = 'Human mindprint registered ✔︎';
     ensureTraceNetRegistered();
     loadVault();
@@ -1201,40 +891,23 @@ function updateMindprint(){
 }
 
 /* === TraceNet (local) === */
-function getTraceNet(){
-  try{
-    return JSON.parse(store.get('tracenet')||'{}');
-  }catch(_e){
-    return {};
-  }
-}
-function putTraceNet(obj){
-  store.set('tracenet', JSON.stringify(obj));
-}
-async function creatorId(pub){
-  const h = await sha256Hex(JSON.stringify(pub));
-  return 'sha256:'+h;
-}
+function getTraceNet(){ try{ return JSON.parse(store.get('tracenet')||'{}'); }catch(_e){ return {}; } }
+function putTraceNet(obj){ store.set('tracenet', JSON.stringify(obj)); }
+async function creatorId(pub){ const h = await sha256Hex(JSON.stringify(pub)); return 'sha256:'+h; }
 let lastCreatorId = null;
 
 async function ensureTraceNetRegistered(){
   const pub = store.get('sa_pub');
   const mp  = store.get('mindprint');
-  if(!pub || !mp) {
-    renderTraceNetStatus();
-    return;
-  }
+  if(!pub || !mp) { renderTraceNetStatus(); return; }
+
   const pubObj = JSON.parse(pub);
   const mpObj  = JSON.parse(mp);
 
   const id = 'sha256:'+await sha256Hex(JSON.stringify(pubObj));
   const tn = getTraceNet();
   if(!tn[id]){
-    tn[id] = {
-      public: pubObj,
-      mind: mpObj.mind_hash,
-      created_at: new Date().toISOString()
-    };
+    tn[id] = { public: pubObj, mind: mpObj.mind_hash, created_at: new Date().toISOString() };
   } else {
     tn[id].mind = mpObj.mind_hash;
     tn[id].updated_at = new Date().toISOString();
@@ -1242,7 +915,6 @@ async function ensureTraceNetRegistered(){
   putTraceNet(tn);
   renderTraceNetStatus();
 }
-
 async function renderTraceNetStatus(){
   const pub = store.get('sa_pub');
   const tn = getTraceNet();
@@ -1260,17 +932,11 @@ async function renderTraceNetStatus(){
   lastCreatorId = cid;
 
   if(tn_creator) tn_creator.textContent = cid;
-
   if(tn_regstatus){
-    let base = tn[cid]
-      ? 'Yes – registered locally.'
-      : 'No – not found in local TraceNet.';
-    if(!STORAGE_WORKS){
-      base += ' (Sandbox mode without persistent storage).';
-    }
+    let base = tn[cid] ? 'Yes – registered locally.' : 'No – not found in local TraceNet.';
+    if(!STORAGE_WORKS) base += ' (Sandbox mode without persistent storage).';
     tn_regstatus.textContent = base;
   }
-
   renderCreatorDashboard();
 }
 
@@ -1283,14 +949,8 @@ async function renderVault(){
   if(unlocked){
     vault_status.textContent = 'Vault is unlocked on this device.';
     if(vault_error) vault_error.textContent = '';
-    if(vault_button){
-      vault_button.textContent = 'Lock';
-      vault_button.onclick = lockVault;
-    }
-    if(vault_pass){
-      vault_pass.placeholder = 'Vault unlocked';
-      vault_pass.value = '';
-    }
+    if(vault_button){ vault_button.textContent = 'Lock'; vault_button.onclick = lockVault; }
+    if(vault_pass){ vault_pass.placeholder = 'Vault unlocked'; vault_pass.value = ''; }
 
     const pubRaw  = store.get('sa_pub');
     const privRaw = store.get('sa_priv');
@@ -1302,7 +962,7 @@ async function renderVault(){
         const pubObj = JSON.parse(pubRaw);
         cid = 'sha256:'+await sha256Hex(JSON.stringify(pubObj));
         if(vault_pub)  vault_pub.textContent  = pubObj.edPublic || '(unknown format)';
-      }catch(e){
+      }catch(_e){
         if(vault_pub) vault_pub.textContent = '(error reading public key)';
       }
     }else{
@@ -1310,64 +970,44 @@ async function renderVault(){
     }
 
     if(vault_creator) vault_creator.textContent = cid;
-
-    if(privRaw){
-      if(vault_priv) vault_priv.textContent = privRaw;
-    }else{
-      if(vault_priv) vault_priv.textContent = '(no private key yet)';
-    }
+    if(vault_priv) vault_priv.textContent = privRaw ? privRaw : '(no private key yet)';
 
     if(mpRaw){
       try{
         const mpObj = JSON.parse(mpRaw);
         if(vault_mind)    vault_mind.textContent    = mpObj.mind_hash || '(missing)';
         if(vault_created) vault_created.textContent = mpObj.created_at || '(unknown)';
-      }catch(e){
-        if(vault_mind)    vault_mind.textContent    = '(error reading mindprint)';
+      }catch(_e){
+        if(vault_mind) vault_mind.textContent = '(error reading mindprint)';
         if(vault_created) vault_created.textContent = '–';
       }
     }else{
-      if(vault_mind)    vault_mind.textContent    = '(no mindprint yet)';
+      if(vault_mind) vault_mind.textContent = '(no mindprint yet)';
       if(vault_created) vault_created.textContent = '–';
     }
-
   }else{
     vault_status.textContent = storedHash
       ? 'Vault locked. Enter your password to unlock.'
       : 'No Vault password set. Choose a password to create your BIO-ID Vault.';
     if(vault_error) vault_error.textContent = '';
-    if(vault_button){
-      vault_button.textContent = storedHash ? 'Unlock' : 'Create & unlock';
-      vault_button.onclick = openVault;
-    }
-    if(vault_pass){
-      vault_pass.placeholder = storedHash ? 'Password…' : 'Choose new password…';
-      vault_pass.value = '';
-    }
+    if(vault_button){ vault_button.textContent = storedHash ? 'Unlock' : 'Create & unlock'; vault_button.onclick = openVault; }
+    if(vault_pass){ vault_pass.placeholder = storedHash ? 'Password…' : 'Choose new password…'; vault_pass.value = ''; }
     if(vault_creator) vault_creator.textContent = '(locked)';
     if(vault_pub)     vault_pub.textContent     = '(locked)';
     if(vault_priv)    vault_priv.textContent    = '(locked)';
     if(vault_mind)    vault_mind.textContent    = '(locked)';
     if(vault_created) vault_created.textContent = '–';
   }
-
   renderCreatorDashboard();
 }
-
-function loadVault(){
-  renderVault();
-}
-
+function loadVault(){ renderVault(); }
 async function openVault(){
   if(!vault_pass) return;
   const pass = vault_pass.value || '';
   const storedHash = store.get('sa_vault_hash');
 
   if(!storedHash){
-    if(!pass){
-      if(vault_error) vault_error.textContent = 'Choose a password first.';
-      return;
-    }
+    if(!pass){ if(vault_error) vault_error.textContent = 'Choose a password first.'; return; }
     const h = await sha256Hex(pass);
     store.set('sa_vault_hash', h);
     store.set('sa_vault_unlocked','1');
@@ -1382,11 +1022,7 @@ async function openVault(){
     }
   }
 }
-
-function lockVault(){
-  store.set('sa_vault_unlocked','0');
-  renderVault();
-}
+function lockVault(){ store.set('sa_vault_unlocked','0'); renderVault(); }
 
 /* === DASHBOARD RENDER === */
 let lastOriginInfo = null;
@@ -1395,24 +1031,14 @@ let lastSvg   = null;
 let verificationLog = [];
 
 function renderCreatorDashboard(){
-  if(cd_creator_id){
-    if(lastCreatorId){
-      cd_creator_id.textContent = lastCreatorId;
-    }else{
-      cd_creator_id.textContent = '(no key yet)';
-    }
-  }
+  if(cd_creator_id) cd_creator_id.textContent = lastCreatorId ? lastCreatorId : '(no key yet)';
 
   if(cd_vault_status){
     const unlocked   = store.get('sa_vault_unlocked') === '1';
     const storedHash = store.get('sa_vault_hash');
-    if(!storedHash){
-      cd_vault_status.textContent = 'Not initialized';
-    }else if(unlocked){
-      cd_vault_status.textContent = 'Unlocked on this device';
-    }else{
-      cd_vault_status.textContent = 'Locked';
-    }
+    if(!storedHash) cd_vault_status.textContent = 'Not initialized';
+    else if(unlocked) cd_vault_status.textContent = 'Unlocked on this device';
+    else cd_vault_status.textContent = 'Locked';
   }
 
   if(cd_mindprint){
@@ -1424,53 +1050,46 @@ function renderCreatorDashboard(){
       }catch(_e){
         cd_mindprint.textContent = 'Registered';
       }
-    }else{
-      cd_mindprint.textContent = 'Not registered yet';
-    }
+    }else cd_mindprint.textContent = 'Not registered yet';
   }
 
   if(cd_origin_status){
     if(lastOriginInfo){
-      cd_origin_status.textContent =
-        lastOriginInfo.label+' · score '+lastOriginInfo.score.toFixed(3);
-    }else{
-      cd_origin_status.textContent = 'No analysis yet';
-    }
+      const ui = ORIGIN.UI(lastOriginInfo.label, lastOriginInfo.score);
+      cd_origin_status.textContent = `${ui.label} · score ${typeof lastOriginInfo.score==='number' ? lastOriginInfo.score.toFixed(3) : 'n/a'}`;
+    }else cd_origin_status.textContent = 'No analysis yet';
   }
 
   if(dash_latest_badge){
     if(!lastToken){
-      dash_latest_badge.innerHTML =
-        'No badge created yet. Go to TRACE and create your first badge.';
+      dash_latest_badge.innerHTML = 'No badge created yet. Go to TRACE and create your first badge.';
     }else{
       const t = lastToken;
       const origin = t.metadata?.content_origin;
       const when = (t.created_at || t.metadata?.session?.issued_at || '').slice(0,19).replace('T',' ');
       const cid = t.metadata?.creator_id || '(unknown)';
       const originLabel = origin?.label || 'n/a';
-      const originScore = typeof origin?.score === 'number' ? origin.score.toFixed(3) : 'n/a';
+      const originScore = typeof origin?.score === 'number' ? origin.score : null;
+      const ui = ORIGIN.UI(originLabel, originScore);
 
       dash_latest_badge.innerHTML =
         `<div class="badge-summary">
           <div><b>Status:</b> latest TRACE badge created.</div>
           <div><b>Time:</b> ${when || '(unknown)'}</div>
           <div><b>Creator:</b> <code>${cid}</code></div>
-          <div><b>Content origin:</b> ${originLabel} (score ${originScore})</div>
+          <div><b>Content origin:</b> ${ui.label} (score ${typeof originScore==='number' ? originScore.toFixed(3) : 'n/a'})</div>
           <div style="margin-top:6px;font-size:11px;color:#9fb0c4;">
             Full visual badge is shown under TRACE and used automatically in Verify.
           </div>
         </div>`;
     }
   }
-
   renderVerificationLog();
 }
-
 function renderVerificationLog(){
   if(!dash_verifications) return;
   if(!verificationLog.length){
-    dash_verifications.textContent =
-      'No verifications yet. Verify a badge to see it here.';
+    dash_verifications.textContent = 'No verifications yet. Verify a badge to see it here.';
     return;
   }
   let html = '<table class="table-mini"><thead><tr><th>Time</th><th>Status</th><th>Creator</th><th>Origin</th></tr></thead><tbody>';
@@ -1479,6 +1098,7 @@ function renderVerificationLog(){
     let label = 'verified';
     if(item.status === 'failed'){ cls='status-fail'; label='failed'; }
     if(item.status === 'expired'){ cls='status-expired'; label='expired'; }
+    if(item.status === 'warning'){ cls='status-warn'; label='warning'; }
     html += `<tr>
       <td>${item.time.slice(0,19).replace('T',' ')}</td>
       <td><span class="status-pill ${cls}">${label}</span></td>
@@ -1494,7 +1114,6 @@ function renderVerificationLog(){
 let attachedImageFile = null;
 let attachedImageHash = null;
 let attachedThumbDataURL = null;
-let attachedImageFeatures = null;
 let badgeTimerInterval = null;
 
 async function handleImage(e){
@@ -1505,7 +1124,6 @@ async function handleImage(e){
 
   const buf = await f.arrayBuffer();
   attachedImageHash = await sha256HexBuffer(buf);
-  attachedImageFeatures = null;
 
   const img = new Image();
   img.onload = ()=>{
@@ -1521,113 +1139,11 @@ async function handleImage(e){
       c_thumb.src = attachedThumbDataURL;
       c_thumb.classList.remove('hide');
     }
-
-    /* small working canvas for ORIGIN-X */
-    const size = 96;
-    const featCanvas = document.createElement('canvas');
-    featCanvas.width = size;
-    featCanvas.height = size;
-    const fctx = featCanvas.getContext('2d');
-    fctx.drawImage(img,0,0,size,size);
-    const data = fctx.getImageData(0,0,size,size).data;
-
-    let sumR=0,sumG=0,sumB=0;
-    let sumR2=0,sumG2=0,sumB2=0;
-    let sumRG=0,sumRG2=0;
-    let sumYB=0,sumYB2=0;
-    let totalDiff=0;
-    let count=0;
-    const w=size,h=size;
-
-    const gray = new Float32Array(w*h);
-
-    for(let y=0;y<h;y++){
-      for(let x=0;x<w;x++){
-        const idx=(y*w+x)*4;
-        const r=data[idx],g=data[idx+1],b=data[idx+2];
-        sumR+=r; sumG+=g; sumB+=b;
-        sumR2+=r*r; sumG2+=g*g; sumB2+=b*b;
-
-        const rg=r-g;
-        const yb=(r+g)/2 - b;
-        sumRG+=rg; sumRG2+=rg*rg;
-        sumYB+=yb; sumYB2+=yb*yb;
-
-        if(x>0){
-          const idxL=(y*w+(x-1))*4;
-          const rl=data[idxL],gl=data[idxL+1],bl=data[idxL+2];
-          totalDiff+=Math.abs(r-rl)+Math.abs(g-gl)+Math.abs(b-bl);
-        }
-        if(y>0){
-          const idxT=((y-1)*w+x)*4;
-          const rt=data[idxT],gt=data[idxT+1],bt=data[idxT+2];
-          totalDiff+=Math.abs(r-rt)+Math.abs(g-gt)+Math.abs(b-bt);
-        }
-        const gval = 0.299*r+0.587*g+0.114*b;
-        gray[y*w+x] = gval;
-        count++;
-      }
-    }
-
-    const N=count||1;
-    const meanR=sumR/N,meanG=sumG/N,meanB=sumB/N;
-    const varR=sumR2/N-meanR*meanR;
-    const varG=sumG2/N-meanG*meanG;
-    const varB=sumB2/N-meanB*meanB;
-    const brightness=(meanR+meanG+meanB)/3;
-
-    const meanRG=sumRG/N,meanYB=sumYB/N;
-    const varRG=sumRG2/N-meanRG*meanRG;
-    const varYB=sumYB2/N-meanYB*meanYB;
-
-    const stdRG=Math.sqrt(Math.max(varRG,0));
-    const stdYB=Math.sqrt(Math.max(varYB,0));
-    const colorfulness=Math.sqrt(stdRG*stdRG+stdYB*stdYB)+0.3*Math.sqrt(meanRG*meanRG+meanYB*meanYB);
-
-    const diffsCount = (w*h*2 - w - h);
-    const avgNeighborDiff = diffsCount>0 ? totalDiff/diffsCount : 0;
-
-    /* ORIGIN-X noise residual (enkel Laplacian) */
-    let sumLap2 = 0;
-    let sumAbsLap = 0;
-    let lapCount = 0;
-    for(let y=1;y<h-1;y++){
-      for(let x=1;x<w-1;x++){
-        const c = gray[y*w+x];
-        const up = gray[(y-1)*w+x];
-        const dn = gray[(y+1)*w+x];
-        const lf = gray[y*w+(x-1)];
-        const rt = gray[y*w+(x+1)];
-        const lap = 4*c - (up+dn+lf+rt);
-        sumLap2 += lap*lap;
-        sumAbsLap += Math.abs(lap);
-        lapCount++;
-      }
-    }
-    const lapRms = lapCount>0 ? Math.sqrt(sumLap2/lapCount) : 0;
-    const lapMeanAbs = lapCount>0 ? (sumAbsLap/lapCount) : 0;
-    const noiseEnergy = lapRms + 0.3*lapMeanAbs;
-
-    attachedImageFeatures = {
-      legacy: {
-        brightness,
-        varR, varG, varB,
-        colorfulness,
-        avgNeighborDiff
-      },
-      originx: {
-        brightness,
-        colorfulness,
-        avgNeighborDiff,
-        lapRms,
-        lapMeanAbs,
-        noiseEnergy
-      }
-    };
   };
   img.src = URL.createObjectURL(f);
 }
 
+/* canonical JSON (deterministic signing) */
 function canonicalize(o){
   if(o===null || typeof o!=='object') return o;
   if(Array.isArray(o)) return o.map(canonicalize);
@@ -1635,15 +1151,10 @@ function canonicalize(o){
   Object.keys(o).sort().forEach(k=>{ out[k] = canonicalize(o[k]); });
   return out;
 }
-function canonicalJSONString(o){
-  return JSON.stringify(canonicalize(o));
-}
+function canonicalJSONString(o){ return JSON.stringify(canonicalize(o)); }
 
 function startBadgeCountdown(targetMs){
-  if(badgeTimerInterval){
-    clearInterval(badgeTimerInterval);
-    badgeTimerInterval = null;
-  }
+  if(badgeTimerInterval){ clearInterval(badgeTimerInterval); badgeTimerInterval = null; }
   if(!b_preview) return;
   const svgRoot = b_preview.querySelector('svg');
   if(!svgRoot) return;
@@ -1655,39 +1166,29 @@ function startBadgeCountdown(targetMs){
     const now = Date.now();
     let remaining = Math.round((targetMs - now)/1000);
     if(remaining < 0) remaining = 0;
-    if(textEl){
-      textEl.textContent = remaining + 's';
-    }
+    if(textEl) textEl.textContent = remaining + 's';
     if(remaining <= 0){
       if(dotEl) dotEl.setAttribute('fill','#3b82f6');
       clearInterval(badgeTimerInterval);
       badgeTimerInterval = null;
     }
   }
-
   tick();
   badgeTimerInterval = setInterval(tick,1000);
 }
 
-/* === CONTENT ORIGIN (ORIGIN-X HYBRID) === */
-async function analyzeContent(txt, imgFeatures, imgHash){
-  // Neutral fallback om Winston AI inte svarar.
-  // Ingen lokal AI-detektion görs här.
+/* === CONTENT ORIGIN === */
+async function analyzeContentFallback(){
   return {
     score: 0.5,
     label: 'Unknown (Winston offline)',
-    explanation: 'Winston AI kunde inte nås – ingen lokal AI-detektor används, endast neutral fallback.',
+    explanation: 'Winston AI kunde inte nås – neutral fallback.',
     text: null,
     image: null
   };
 }
 
-
-
-
-
 async function callOnlineAIDetector(file){
-  // 1) Läs fil -> dataURL
   const dataUrl = await new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result);
@@ -1695,7 +1196,6 @@ async function callOnlineAIDetector(file){
     reader.readAsDataURL(file);
   });
 
-  // 2) Ladda i <img>
   const img = new Image();
   await new Promise((resolve, reject) => {
     img.onload = resolve;
@@ -1703,7 +1203,6 @@ async function callOnlineAIDetector(file){
     img.src = dataUrl;
   });
 
-  // 3) Winston kräver minst 256x256 → skala upp vid behov
   const min = 256;
   const w0 = img.naturalWidth || img.width;
   const h0 = img.naturalHeight || img.height;
@@ -1718,46 +1217,26 @@ async function callOnlineAIDetector(file){
   const ctx = canvas.getContext("2d", { willReadFrequently: false });
   ctx.drawImage(img, 0, 0, w, h);
 
-  // 4) Konvertera till JPEG (guard: toBlob kan bli null)
   const jpegBlob = await new Promise((resolve) => {
     canvas.toBlob((b) => resolve(b), "image/jpeg", 0.92);
   });
 
-  // Fallback: om toBlob failar, skicka originalfilen
   const blobToSend = jpegBlob || file;
 
-  // 5) Skicka multipart till backend
   const form = new FormData();
-
-  // Skicka båda fältnamn: "image" och "file" (vanligaste mismatchen bakom 400)
   form.append("image", blobToSend, "upload.jpg");
+  form.append("file",  blobToSend, "upload.jpg");
 
   try{
-    const res = await fetch("https://signai-tamy.onrender.com/detect-image", {
-  method: "POST",
-  body: form
-});
+    const res = await fetch("https://signai-tamy.onrender.com/detect-image", { method: "POST", body: form });
 
-
-    // Försök JSON först, annars text (så du ser backend/winston-felet)
     const rawText = await res.text();
     let data = null;
     try { data = JSON.parse(rawText); } catch(_) {}
 
     if(!res.ok){
-      const msg =
-        data?.label ||
-        data?.error ||
-        data?.message ||
-        rawText?.slice(0, 180) ||
-        ("HTTP error " + res.status);
-
-      return {
-        ai_score: 0.5,
-        label: "Backend/Winston error: " + msg,
-        version: data?.version || "signai-backend",
-        raw: data || rawText
-      };
+      const msg = data?.label || data?.error || data?.message || rawText?.slice(0, 180) || ("HTTP error " + res.status);
+      return { ai_score: 0.5, label: "Backend/Winston error: " + msg, version: data?.version || "signai-backend", raw: data || rawText };
     }
 
     const aiScoreCandidate = data?.ai_score;
@@ -1771,252 +1250,175 @@ async function callOnlineAIDetector(file){
 
     return { ai_score: aiScore, label, version, raw: data };
   }catch(err){
-    return {
-      ai_score: 0.5,
-      label: "Network error contacting backend: " + err.message,
-      version: "signai-backend",
-      raw: null
-    };
+    return { ai_score: 0.5, label: "Network error contacting backend: " + err.message, version: "signai-backend", raw: null };
   }
 }
 
-
-
-
-/* BIO-ID glyph */
-async function buildGlyphSvg(seed, originScore){
-  const h = await sha256Hex(seed);
-
-  const humanPalette  = ['#22b7ff','#22e0d8','#4ade80','#22c55e'];
-  const mixedPalette  = ['#22b7ff','#22e0d8','#a855f7','#38bdf8'];
-  const aiPalette     = ['#f97316','#fb7185','#a855f7','#facc15'];
-
-  let colors;
-  if(typeof originScore === 'number'){
-    if(originScore < 0.35) colors = humanPalette;
-    else if(originScore > 0.65) colors = aiPalette;
-    else colors = mixedPalette;
-  }else{
-    colors = mixedPalette;
+function renderContentOrigin(info){
+  if(!info){
+    if(co_status) co_status.textContent = 'Analyzing content origin…';
+    if(co_details) co_details.textContent = '';
+    return;
   }
 
-  const gridSize = 4;
-  const cellSize = 22;
-  const margin = 10;
-  let shapes = '';
+  const ui = ORIGIN.UI(info.label, info.score);
+  if(co_status) co_status.textContent = `${ui.label} · score ${ui.pretty} · (${info.label || 'Unknown'})`;
 
-  for(let i=0;i<gridSize*gridSize;i++){
-    const hex = h[i];
-    const val = parseInt(hex,16);
-    if((val % 2) === 0){
-      const row = Math.floor(i / gridSize);
-      const col = i % gridSize;
-      const cx = margin + cellSize/2 + col*cellSize;
-      const cy = margin + cellSize/2 + row*cellSize;
-      const r  = 4 + (val % 4);
-      const color = colors[val % colors.length];
-      shapes += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" opacity="0.9">
-        <animate attributeName="r" values="${r};${r+1.5};${r}" dur="${1+val/32}s" repeatCount="indefinite"/>
-      </circle>`;
+  if(co_details){
+    const lines = [];
+    if(info.image){
+      lines.push(`IMAGE SCORE: ${ui.pretty} → ${ui.label}`);
+      if(info.image.hash) lines.push(`Image hash: ${info.image.hash}`);
+      lines.push('');
     }
+    if(info.explanation){
+      lines.push('DETAILS:');
+      lines.push(info.explanation);
+      lines.push('');
+    }
+    co_details.textContent = lines.join('\n');
   }
+}
+
+/* === DNA/HELIX GLYPH === */
+function prngFromHex(hex){
+  // tiny deterministic PRNG from hex
+  let x = 0;
+  for(let i=0;i<Math.min(16, hex.length);i++) x = (x*16 + parseInt(hex[i],16)) >>> 0;
+  return ()=>{ x ^= x<<13; x ^= x>>>17; x ^= x<<5; return (x>>>0) / 4294967296; };
+}
+async function buildHelixGlyphSvg(seed, originScore){
+  const h = await sha256Hex(seed);
+  const rnd = prngFromHex(h);
+
+  const t = ORIGIN.TIER(originScore);
+  const palette = (t.tier === 'human')
+    ? ['#22b7ff','#22e0d8','#4ade80','#22c55e']
+    : (t.tier === 'ai')
+      ? ['#ef4444','#fb7185','#a855f7','#f59e0b']
+      : ['#22b7ff','#22e0d8','#a855f7','#f59e0b'];
+
+  const w = 140, hgt = 126;
+  const cx = 70, cy = 62;
+  const amp = 26 + Math.floor(rnd()*6);           // amplitude
+  const turns = 2.1 + rnd()*0.9;                  // 2–3-ish turns
+  const dots = 28;                                // crisp and not noisy
+  const tilt = (rnd()*10 - 5) * Math.PI/180;      // slight tilt
+  const phase = rnd()*Math.PI*2;
+
+  let leftDots = '';
+  let rightDots = '';
+  let rungs = '';
+
+  for(let i=0;i<dots;i++){
+    const p = i/(dots-1);
+    const y = 14 + p*(hgt-36);
+    const a = phase + p*turns*Math.PI*2;
+
+    const xSin = Math.sin(a);
+    const x = cx + xSin*amp;
+    const z = (Math.cos(a) + 1)/2; // 0..1 for "depth"
+    const radius = 2.2 + z*2.2;
+    const op = 0.30 + z*0.70;
+
+    // rotate around center for tilt (2D)
+    const dx = x - cx;
+    const dy = y - cy;
+    const rx = cx + (dx*Math.cos(tilt) - dy*Math.sin(tilt));
+    const ry = cy + (dx*Math.sin(tilt) + dy*Math.cos(tilt));
+
+    // second strand is opposite phase
+    const x2Sin = Math.sin(a + Math.PI);
+    const x2 = cx + x2Sin*amp;
+    const dx2 = x2 - cx;
+    const rx2 = cx + (dx2*Math.cos(tilt) - dy*Math.sin(tilt));
+    const ry2 = ry;
+
+    const c1 = palette[i % palette.length];
+    const c2 = palette[(i+2) % palette.length];
+
+    // rung (behind/forward)
+    const rungOp = 0.18 + z*0.30;
+    rungs += `<line x1="${rx.toFixed(2)}" y1="${ry.toFixed(2)}" x2="${rx2.toFixed(2)}" y2="${ry2.toFixed(2)}"
+      stroke="#9fb0c4" stroke-opacity="${rungOp.toFixed(2)}" stroke-width="1.1" />`;
+
+    leftDots += `<circle cx="${rx.toFixed(2)}" cy="${ry.toFixed(2)}" r="${radius.toFixed(2)}"
+      fill="${c1}" opacity="${op.toFixed(2)}"/>`;
+    rightDots += `<circle cx="${rx2.toFixed(2)}" cy="${ry2.toFixed(2)}" r="${radius.toFixed(2)}"
+      fill="${c2}" opacity="${op.toFixed(2)}"/>`;
+  }
+
+  const chipText = t.label; // HUMAN / MIXED / AI / Unknown
+  const chipStroke = (t.tier==='human') ? '#16a34a' : (t.tier==='ai') ? '#ef4444' : (t.tier==='mixed') ? '#f59e0b' : '#94a3b8';
 
   return `  <g id="trace_fp" transform="translate(20,22)">
-    <rect x="0" y="0" width="140" height="126" rx="22"
+    <rect x="0" y="0" width="${w}" height="${hgt}" rx="22"
           fill="#020617" stroke="#1e293b" stroke-width="1.2"/>
-    <rect x="3" y="3" width="134" height="120" rx="20"
+    <rect x="3" y="3" width="${w-6}" height="${hgt-6}" rx="20"
           fill="#020617" stroke="#111827" stroke-width="1"/>
-    <rect x="3" y="3" width="134" height="120" rx="20"
-          fill="none" stroke="#1d4ed8" stroke-width="0.8" opacity="0.65"/>
+    <rect x="3" y="3" width="${w-6}" height="${hgt-6}" rx="20"
+          fill="none" stroke="#1d4ed8" stroke-width="0.8" opacity="0.5"/>
 
-    <g transform="translate(14,14)">
-      <g>
-        ${shapes}
-        <animateTransform attributeName="transform"
-          type="rotate"
-          from="0 44 44"
-          to="360 44 44"
-          dur="18s"
-          repeatCount="indefinite"/>
-      </g>
+    <g id="helix" transform="translate(0,0)">
+      ${rungs}
+      ${leftDots}
+      ${rightDots}
+      <animateTransform attributeName="transform"
+        type="rotate"
+        from="0 70 62" to="360 70 62"
+        dur="${(18 + Math.floor(rnd()*10))}s"
+        repeatCount="indefinite"/>
     </g>
 
     <g transform="translate(10,102)">
-      <rect x="0" y="0" width="32" height="16" rx="7"
-            fill="#020617" stroke="#1e293b" stroke-width="1"/>
-      <text x="16" y="11" text-anchor="middle"
-            font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-            font-size="9" fill="#a5b4fc">ORIGIN</text>
+      <rect x="0" y="0" width="50" height="16" rx="7" fill="#020617" stroke="#1e293b" stroke-width="1"/>
+      <text x="25" y="11" text-anchor="middle"
+        font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+        font-size="9" fill="#a5b4fc">ORIGIN</text>
 
-      <rect x="38" y="0" width="34" height="16" rx="7"
-            fill="#020617" stroke="#1e293b" stroke-width="1"/>
-      <text x="55" y="11" text-anchor="middle"
-            font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-            font-size="9" fill="#a5b4fc">HUMAN</text>
-
-      <rect x="78" y="0" width="32" height="16" rx="7"
-            fill="#020617" stroke="#1e293b" stroke-width="1"/>
-      <text x="94" y="11" text-anchor="middle"
-            font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-            font-size="9" fill="#a5b4fc">TT</text>
+      <rect x="56" y="0" width="60" height="16" rx="7" fill="#020617" stroke="${chipStroke}" stroke-width="1"/>
+      <text x="86" y="11" text-anchor="middle"
+        font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+        font-size="9" fill="#e5f2ff">${chipText}</text>
     </g>
   </g>`;
 }
 
-
-function renderContentOrigin(info){
-    const co_status = document.getElementById('co_status');
-    const co_details = document.getElementById('co_details');
-
-    if(!info){
-        if(co_status) co_status.textContent = 'Analyzing content origin…';
-        if(co_details) co_details.textContent = '';
-        return;
-    }
-
-    let scoreTxt = (info.score !== undefined)
-        ? (info.score * 100).toFixed(1) + '%'
-        : 'N/A';
-
-    if(co_status){
-        co_status.textContent = `${info.label} (${scoreTxt})`;
-    }
-
-    if(co_details){
-        let lines = [];
-
-        if(info.text){
-            lines.push(`TEXT SCORE: ${(info.text.score * 100).toFixed(1)}% → ${info.text.label}`);
-            lines.push(`Words: ${info.text.words}`);
-            lines.push(`Punctuation-per-word: ${info.text.punctuationPerWord.toFixed(3)}`);
-            lines.push('');
-        }
-
-        if(info.image){
-            lines.push(`IMAGE SCORE: ${(info.image.score * 100).toFixed(1)}% → ${info.image.label}`);
-            if(info.image.hash) lines.push(`Image hash: ${info.image.hash}`);
-            lines.push('');
-        }
-
-        if(info.explanation){
-            lines.push('EXPLANATION:');
-            lines.push(info.explanation);
-            lines.push('');
-        }
-
-        co_details.textContent = lines.join('\n');
-    }
-}
-
-
-
-async function buildAIBadge(hash, originInfo){
-    return `
-<svg width="420" height="200" xmlns="http://www.w3.org/2000/svg">
-  <rect width="420" height="200" rx="18" fill="#2b0000" stroke="#ff4444" stroke-width="2"/>
-  <text x="20" y="40" fill="#ff7777" font-size="24" font-weight="700">
-    AI-GENERATED CONTENT
-  </text>
-  <text x="20" y="80" fill="#ffaa88" font-size="16">
-    Origin Score: ${(originInfo.score*100).toFixed(1)}%
-  </text>
-  <text x="20" y="110" fill="#ffaa88" font-size="16">
-    Classification: ${originInfo.label}
-  </text>
-  <text x="20" y="150" fill="#ff9999" font-size="14">
-    Content Hash:
-  </text>
-  <text x="20" y="170" fill="#ffdddd" font-size="12" style="opacity:0.9;">
-    ${hash}
-  </text>
-</svg>`;
-}
-
-async function buildNeutralBadge(hash, originInfo){
-    return `
-<svg width="420" height="200" xmlns="http://www.w3.org/2000/svg">
-  <rect width="420" height="200" rx="18" fill="#1e1e2a" stroke="#7aa7ff" stroke-width="2"/>
-  <text x="20" y="40" fill="#bcd3ff" font-size="22" font-weight="700">
-    MIXED / UNCERTAIN ORIGIN
-  </text>
-  <text x="20" y="80" fill="#e0e8ff" font-size="16">
-    Score: ${(originInfo.score*100).toFixed(1)}%
-  </text>
-  <text x="20" y="110" fill="#e0e8ff" font-size="16">
-    Label: ${originInfo.label}
-  </text>
-  <text x="20" y="150" fill="#aaccff" font-size="14">
-    Hash:
-  </text>
-  <text x="20" y="170" fill="#d5e4ff" font-size="12">
-    ${hash}
-  </text>
-</svg>`;
-}
-
+/* === BADGE BUILD === */
+let attachedThumbDataURL = null;
 
 async function buildBadge(){
   try{
     const txt = c_text ? (c_text.value || '') : '';
-    if(!txt.trim()){
-      alert('Write or paste some text first.');
-      return;
-    }
+    if(!txt.trim()){ alert('Write or paste some text first.'); return; }
+
     const privRaw = store.get('sa_priv');
     const pubRaw  = store.get('sa_pub');
-    if(!privRaw || !pubRaw){
-      alert('Create/import key first (Step 1).');
-      return;
-    }
-    const mpRaw = store.get('mindprint');
-    if(!mpRaw){
-      alert('Create your mindprint first (Step 2).');
-      return;
-    }
+    if(!privRaw || !pubRaw){ alert('Create/import key first (Step 1).'); return; }
 
-    if(co_status) co_status.textContent = 'Analyserar innehåll via Winston AI…';
+    const mpRaw = store.get('mindprint');
+    if(!mpRaw){ alert('Create your mindprint first (Step 2).'); return; }
+
     renderContentOrigin(null);
 
     let originInfo;
-
     if(attachedImageFile){
-      try{
-        const online = await callOnlineAIDetector(attachedImageFile);
-
-        originInfo = {
-          score: online.ai_score,
-          label: online.label,
-          explanation:
-            "Winston AI image detection: score " +
-            online.ai_score.toFixed(3) +
-            " → " + online.label +
-            " (model: " + (online.version || "winston-ai") + ")",
-          text: null,
-          image: {
-            score: online.ai_score,
-            label: online.label,
-            hash: attachedImageHash || null
-          }
-        };
-      }catch(err){
-        console.error("Winston AI call failed:", err);
-        originInfo = await analyzeContent(txt, null, attachedImageHash);
-      }
+      const online = await callOnlineAIDetector(attachedImageFile);
+      originInfo = {
+        score: online.ai_score,
+        label: online.label,
+        explanation: `Winston AI image detection: score ${online.ai_score.toFixed(3)} → ${online.label} (model: ${online.version || 'winston-ai'})`,
+        text: null,
+        image: { score: online.ai_score, label: online.label, hash: attachedImageHash || null }
+      };
     }else{
       originInfo = {
         score: 0.30,
         label: 'Human (no image, not scanned)',
-        explanation: 'Ingen bild bifogad. Winston AI körs endast på bilder. Texten är inte AI-skannad, bara signerad med ditt BIO-ID.',
+        explanation: 'Ingen bild bifogad. Winston AI körs endast på bilder. Texten är inte AI-skannad här, bara signerad med ditt BIO-ID.',
         text: null,
         image: null
       };
-    }
-
-    let badgeType = "human";
-    if(originInfo.score > 0.70){
-      badgeType = "ai";
-    } else if(originInfo.score >= 0.40){
-      badgeType = "mixed";
     }
 
     lastOriginInfo = originInfo;
@@ -2025,12 +1427,13 @@ async function buildBadge(){
 
     const mp   = JSON.parse(mpRaw);
     const content_hash = await sha256Hex(txt);
+
     const session = {
       issued_at: new Date().toISOString(),
       expires_in: 60,
-      nonce: [...crypto.getRandomValues(new Uint8Array(8))]
-        .map(b=>b.toString(16).padStart(2,'0')).join('')
+      nonce: [...crypto.getRandomValues(new Uint8Array(8))].map(b=>b.toString(16).padStart(2,'0')).join('')
     };
+
     const pubJ = JSON.parse(pubRaw);
 
     const tokenCore = {
@@ -2058,16 +1461,13 @@ async function buildBadge(){
 
     const token = {
       ...tokenCore,
-      proof: {
-        alg: 'Ed25519',
-        edPublic: pubJ.edPublic,
-        sig: b64u(sig)
-      }
+      proof: { alg: 'Ed25519', edPublic: pubJ.edPublic, sig: b64u(sig) }
     };
     lastToken = token;
 
-    const encoded   = btoa(unescape(encodeURIComponent(JSON.stringify(token))));
-    const humanCode = ('HUMAN: '+(await sha256Hex(
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(token))));
+
+    const humanCode = ('TRACE: '+(await sha256Hex(
       content_hash+(attachedImageHash||'')+session.nonce
     )).slice(0,10)).toUpperCase();
 
@@ -2075,25 +1475,25 @@ async function buildBadge(){
       ? `<g transform="translate(134,18)">
            <rect x="0" y="0" width="40" height="40" rx="12"
                  fill="#020617" stroke="#22b7ff" stroke-width="1.2">
-             <animate attributeName="stroke-width"
-                      values="1.2;2;1.2"
-                      dur="2.4s"
-                      repeatCount="indefinite"/>
+             <animate attributeName="stroke-width" values="1.2;2;1.2" dur="2.4s" repeatCount="indefinite"/>
            </rect>
            <rect x="0" y="0" width="40" height="40" rx="12"
                  fill="none" stroke="#22e0d8" stroke-width="0.6" opacity="0.6">
-             <animate attributeName="opacity"
-                      values="0.4;1;0.4"
-                      dur="3.5s"
-                      repeatCount="indefinite"/>
+             <animate attributeName="opacity" values="0.4;1;0.4" dur="3.5s" repeatCount="indefinite"/>
            </rect>
            <image href="${attachedThumbDataURL}" x="4" y="4" width="32" height="32"
                   preserveAspectRatio="xMidYMid slice" opacity="0.98"/>
          </g>`
       : '';
 
+    const originTier = ORIGIN.TIER(originInfo.score);
+    const dotColor = originTier.dot;
+
     const glyphSeed = content_hash + '|' + (attachedImageHash || '') + '|' + token.metadata.creator_id;
-    const glyph = await buildGlyphSvg(glyphSeed, originInfo.score);
+    const glyph = await buildHelixGlyphSvg(glyphSeed, originInfo.score);
+
+    const borderA = (originTier.tier==='human') ? '#22b7ff' : (originTier.tier==='ai') ? '#ef4444' : '#f59e0b';
+    const borderB = (originTier.tier==='human') ? '#22e0d8' : (originTier.tier==='ai') ? '#a855f7' : '#22e0d8';
 
     const svg =
 `<?xml version="1.0" encoding="UTF-8"?>
@@ -2102,7 +1502,7 @@ async function buildBadge(){
      width="420" height="170"
      data-trace="${encoded}"
      role="img"
-     aria-label="SignAi BIO-ID — Proof of Origin (Winston AI)">
+     aria-label="SignAi BIO-ID — Proof of Origin">
 
   <defs>
     <linearGradient id="bg_grad" x1="0" y="0" x2="1" y="1">
@@ -2112,8 +1512,8 @@ async function buildBadge(){
     </linearGradient>
 
     <linearGradient id="border_grad" x1="0" y="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#22b7ff"/>
-      <stop offset="0.5" stop-color="#22e0d8"/>
+      <stop offset="0" stop-color="${borderA}"/>
+      <stop offset="0.55" stop-color="${borderB}"/>
       <stop offset="1" stop-color="#5b21ff"/>
     </linearGradient>
 
@@ -2121,18 +1521,16 @@ async function buildBadge(){
       .title   { font: 800 18px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill:#e5f2ff; }
       .label   { font: 600 11px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill:#9fb0c4; }
       .value   { font: 700 12px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill:#cfe8ff; }
-      .code    { font: 700 12px ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; letter-spacing:0.08em; }
+      .code    { font: 700 12px ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; letter-spacing:0.08em; fill:#f9fafb; }
       .chip    { font: 700 9px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill:#a5b4fc; }
     </style>
   </defs>
 
-  <rect x="0.5" y="0.5" width="419" height="169" rx="22"
-        fill="url(#bg_grad)"/>
-  <rect x="1.5" y="1.5" width="417" height="167" rx="21"
-        fill="none" stroke="url(#border_grad)" stroke-width="1.4"/>
+  <rect x="0.5" y="0.5" width="419" height="169" rx="22" fill="url(#bg_grad)"/>
+  <rect x="1.5" y="1.5" width="417" height="167" rx="21" fill="none" stroke="url(#border_grad)" stroke-width="1.6"/>
 
   <g transform="translate(396,18)">
-    <circle id="timerDot" cx="0" cy="0" r="6" fill="#16a34a">
+    <circle id="timerDot" cx="0" cy="0" r="6" fill="${dotColor}">
       <animate attributeName="r" values="6;7.5;6" dur="1.6s" repeatCount="indefinite"/>
       <animate attributeName="opacity" values="0.35;1;0.35" dur="1.6s" repeatCount="indefinite"/>
     </circle>
@@ -2142,92 +1540,57 @@ ${glyph}
 ${thumb}
 
   <g transform="translate(20,144)">
-    <rect x="0" y="-18" width="220" height="22" rx="10"
-          fill="#020617" stroke="#1e293b" stroke-width="1"/>
-    <text x="10" y="-4" class="code" fill="#f9fafb">
-      ${humanCode}
-    </text>
+    <rect x="0" y="-18" width="220" height="22" rx="10" fill="#020617" stroke="#1e293b" stroke-width="1"/>
+    <text x="10" y="-4" class="code">${humanCode}</text>
   </g>
 
   <g transform="translate(190,34)">
-    <text x="0" y="0" class="label">
-      SIGNAI / HOP 7.0 BIO-ID
-    </text>
+    <text x="0" y="0" class="label">SIGNAI / HOP 7.0 BIO-ID</text>
 
-    <text x="0" y="24" class="title">
-      "ORIGIN CHECK (Winston AI · conservative)"
-    </text>
+    <text x="0" y="24" class="title">ORIGIN CHECK (Winston AI · conservative)</text>
 
-    <text x="0" y="46" class="label">
-      MODE
-    </text>
-    <text x="84" y="46" class="value">
-      Proof of Origin (BIO-ID + Winston)
-    </text>
+    <text x="0" y="46" class="label">MODE</text>
+    <text x="84" y="46" class="value">Proof of Origin (BIO-ID + Winston)</text>
 
-    <text x="0" y="64" class="label">
-      WINDOW
-    </text>
-    <text x="84" y="64" class="value">
-      TRACE · <tspan id="timerText">60s</tspan> window
-    </text>
+    <text x="0" y="64" class="label">WINDOW</text>
+    <text x="84" y="64" class="value">TRACE · <tspan id="timerText">60s</tspan> window</text>
 
-    <text x="0" y="82" class="label">
-      CREATOR_ID
-    </text>
-    <text x="84" y="82" class="value">
-      ${token.metadata.creator_id}
-    </text>
+    <text x="0" y="82" class="label">CREATOR_ID</text>
+    <text x="84" y="82" class="value">${token.metadata.creator_id}</text>
 
-    <text x="0" y="100" class="label">
-      CONTENT ORIGIN
-    </text>
-    <text x="84" y="100" class="value">
-      ${originInfo.label}
-    </text>
+    <text x="0" y="100" class="label">CONTENT ORIGIN</text>
+    <g transform="translate(84,94)">
+      <circle cx="0" cy="8" r="4.8" fill="${dotColor}"/>
+      <text x="12" y="12" class="value">${originTier.label} · ${originInfo.label}</text>
+    </g>
 
-    <text x="0" y="118" class="label">
-      ORIGIN SCORE
-    </text>
-    <text x="84" y="118" class="value" fill="#bbf7d0">
-      ${(originInfo.score*100).toFixed(1)} %
-    </text>
+    <text x="0" y="118" class="label">ORIGIN SCORE</text>
+    <text x="84" y="118" class="value">${(originInfo.score*100).toFixed(1)} %</text>
 
     <g transform="translate(0,132)">
-      <rect x="0"  y="0" width="60" height="18" rx="9"
-            fill="#020617" stroke="#1e293b"/>
-      <text x="30" y="13" text-anchor="middle" class="chip">
-        ORIGIN
-      </text>
+      <rect x="0"  y="0" width="60" height="18" rx="9" fill="#020617" stroke="#1e293b"/>
+      <text x="30" y="13" text-anchor="middle" class="chip">ORIGIN</text>
 
-      <rect x="68" y="0" width="60" height="18" rx="9"
-            fill="#020617" stroke="#1e293b"/>
-      <text x="98" y="13" text-anchor="middle" class="chip">
-        MINDPRINT
-      </text>
+      <rect x="68" y="0" width="70" height="18" rx="9" fill="#020617" stroke="#1e293b"/>
+      <text x="103" y="13" text-anchor="middle" class="chip">MINDPRINT</text>
 
-      <rect x="136" y="0" width="60" height="18" rx="9"
-            fill="#020617" stroke="#1e293b"/>
-      <text x="166" y="13" text-anchor="middle" class="chip">
-        TRACE·TT
-      </text>
+      <rect x="146" y="0" width="60" height="18" rx="9" fill="#020617" stroke="#1e293b"/>
+      <text x="176" y="13" text-anchor="middle" class="chip">TRACE·TT</text>
     </g>
   </g>
 </svg>`;
 
     lastSvg = svg;
+
     if(b_preview){
       b_preview.innerHTML = svg;
       b_preview.classList.add('clickable');
       b_preview.onclick = ()=>{
         quickVerifyCurrent();
-        const tb = document.getElementById('tb_verify');
-        switchTab('verify', tb);
+        switchTab('verify', document.getElementById('tb_verify'));
       };
     }
-    if(b_preview_hint){
-      b_preview_hint.classList.remove('hide');
-    }
+    if(b_preview_hint) b_preview_hint.classList.remove('hide');
 
     const expiresAt = new Date(session.issued_at).getTime() + session.expires_in*1000;
     startBadgeCountdown(expiresAt);
@@ -2239,31 +1602,21 @@ ${thumb}
   }
 }
 
-
+/* === DOWNLOADS === */
 function downloadSVG(){
-  if(!lastSvg){
-    alert('No badge yet.');
-    return;
-  }
+  if(!lastSvg){ alert('No badge yet.'); return; }
   const blob = new Blob([lastSvg],{type:'image/svg+xml'});
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
-  a.href = url;
-  a.download = 'signai_hop7_badge.svg';
-  a.click();
+  a.href = url; a.download = 'signai_hop7_badge.svg'; a.click();
   URL.revokeObjectURL(url);
 }
 function downloadJSON(){
-  if(!lastToken){
-    alert('No badge yet.');
-    return;
-  }
+  if(!lastToken){ alert('No badge yet.'); return; }
   const blob = new Blob([JSON.stringify(lastToken,null,2)],{type:'application/json'});
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
-  a.href = url;
-  a.download = 'signai_trace_token.json';
-  a.click();
+  a.href = url; a.download = 'signai_trace_token.json'; a.click();
   URL.revokeObjectURL(url);
 }
 
@@ -2276,54 +1629,31 @@ function vSetVisual(statusLabel, subText, boxMode){
     if(boxMode==='ok')      v_box.classList.add('ok');
     if(boxMode==='bad')     v_box.classList.add('bad');
     if(boxMode==='expired') v_box.classList.add('expired');
+    if(boxMode==='warn')    v_box.classList.add('warn');
   }
 }
-
 function resetChecks(){
   if(!v_checks_panel) return;
   v_checks_panel.classList.add('hide');
-
   [chk_sign, chk_time, chk_creator, chk_mind, chk_img].forEach(el=>{
     if(!el) return;
     el.className = 'check-pill check-na';
     el.textContent = 'N/A';
   });
-  if(chk_summary){
-    chk_summary.textContent = 'Signal-score: –/5. No checks yet.';
-  }
+  if(chk_summary) chk_summary.textContent = 'Signal-score: –/5. No checks yet.';
 }
 function setCheck(el, state){
   if(!el) return;
   el.className = 'check-pill';
-  if(state === 'ok'){
-    el.classList.add('check-ok');
-    el.textContent = 'OK';
-  }else if(state === 'fail'){
-    el.classList.add('check-fail');
-    el.textContent = 'FAIL';
-  }else{
-    el.classList.add('check-na');
-    el.textContent = 'N/A';
-  }
+  if(state === 'ok'){ el.classList.add('check-ok'); el.textContent = 'OK'; }
+  else if(state === 'fail'){ el.classList.add('check-fail'); el.textContent = 'FAIL'; }
+  else { el.classList.add('check-na'); el.textContent = 'N/A'; }
 }
-
 function parseBadgeFromText(text){
-  try{
-    return JSON.parse(text);
-  }catch(e){}
+  try{ return JSON.parse(text); }catch(e){}
   const m = text.match(/data-trace="([^"]+)"/i);
   if(m){
-    try{
-      const raw = decodeURIComponent(escape(atob(m[1])));
-      return JSON.parse(raw);
-    }catch(e){}
-  }
-  const m2 = text.match(/<metadata>([^<]+)<\/metadata>/i);
-  if(m2){
-    try{
-      const raw = decodeURIComponent(escape(atob(m2[1])));
-      return JSON.parse(raw);
-    }catch(e){}
+    try{ return JSON.parse(decodeURIComponent(escape(atob(m[1])))); }catch(e){}
   }
   return null;
 }
@@ -2332,7 +1662,6 @@ async function fileToHash(file){
   const buf = await file.arrayBuffer();
   return await sha256HexBuffer(buf);
 }
-
 async function verifyToken(token, maybeImageFile){
   resetChecks();
 
@@ -2346,23 +1675,15 @@ async function verifyToken(token, maybeImageFile){
   const msg = enc.encode(canonicalJSONString(core));
 
   let sigOK = false;
-  try{
-    sigOK = await verifyBytesEd25519(msg, token.proof.sig, token.proof.edPublic);
-  }catch(e){
-    console.error(e);
-    sigOK = false;
-  }
+  try{ sigOK = await verifyBytesEd25519(msg, token.proof.sig, token.proof.edPublic); }
+  catch(e){ console.error(e); sigOK = false; }
 
   let expired = false;
   try{
     const issued = Date.parse(token.metadata?.session?.issued_at || token.created_at || 0);
     const expMs  = (token.metadata?.session?.expires_in ?? 0)*1000;
-    if(!isNaN(issued) && expMs>0){
-      expired = (Date.now() > (issued+expMs));
-    }
-  }catch(e){
-    expired = false;
-  }
+    if(!isNaN(issued) && expMs>0) expired = (Date.now() > (issued+expMs));
+  }catch(e){ expired = false; }
 
   const tn = getTraceNet();
   const cid = token.metadata?.creator_id;
@@ -2372,95 +1693,85 @@ async function verifyToken(token, maybeImageFile){
     creatorOK = true;
     const storedMind = tn[cid].mind;
     const tokenMind  = token.metadata?.mindprint?.mind_hash;
-    if(storedMind && tokenMind && storedMind === tokenMind){
-      mindOK = true;
-    }
+    if(storedMind && tokenMind && storedMind === tokenMind) mindOK = true;
   }
 
-  let imgOK = true;
+  // Image check: N/A if token expects image but verifier didn't provide it
+  let imgState = 'na';
   if(token.metadata?.image_hash){
     if(maybeImageFile){
       const upHash = await fileToHash(maybeImageFile);
-      imgOK = (!!upHash && upHash === token.metadata.image_hash);
-    } else {
-      imgOK = true;
+      imgState = (!!upHash && upHash === token.metadata.image_hash) ? 'ok' : 'fail';
+    }else{
+      imgState = 'na';
     }
   }
 
-  if(expired){
-    vSetVisual('EXPIRED ⏳','Badge was valid, but the 60s window has passed.','expired');
-  }else if(!sigOK){
-    vSetVisual('VERIFICATION FAILED ❌','Signature does not match public key (invalid badge).','bad');
-  }
+  // Origin info (informational) – affects only messaging/log, not crypto checks
+  const originLabel = token.metadata?.content_origin?.label || 'n/a';
+  const originScore = token.metadata?.content_origin?.score;
+  const originTier = ORIGIN.TIER(originScore);
 
   const checks = {
-    signatur: sigOK,
-    tid: !expired,
+    signature: sigOK,
+    time: !expired,
     creator: creatorOK,
     mindprint: mindOK,
-    bild: imgOK
+    image: (imgState === 'ok') ? true : (imgState === 'fail') ? false : true // N/A doesn't fail verification
   };
-  const passed = Object.values(checks).filter(Boolean).length;
+  const passedStrict = (sigOK?1:0) + (!expired?1:0) + (creatorOK?1:0) + (mindOK?1:0) + ((imgState==='ok' || imgState==='na')?1:0);
 
-  let statusForLog = 'failed';
-  if(expired) statusForLog = 'expired';
-  if(sigOK && !expired && passed >= 4) statusForLog = 'verified';
-
-  if(sigOK && !expired && passed >= 4){
-    let summary = 'Signature OK, time within window.';
-    if(creatorOK) summary += ' TraceNet identity found.';
-    if(mindOK)    summary += ' Mindprint matches.';
-    if(token.metadata?.image_hash && !maybeImageFile){
-      summary += ' Image not verified now, but other signals are strong.';
-    } else if(token.metadata?.image_hash && imgOK){
-      summary += ' Image hash matches.';
+  if(expired){
+    vSetVisual('EXPIRED ⏳',`Badge was valid, but the 60s window has passed. ORIGIN: ${originTier.label}.`,'expired');
+  }else if(!sigOK){
+    vSetVisual('VERIFICATION FAILED ❌',`Signature does not match public key. ORIGIN: ${originTier.label}.`,'bad');
+  }else{
+    // Signature OK + within time: require creator+mind to be strong. Image is optional.
+    if(creatorOK && mindOK){
+      const extra = (imgState==='ok') ? ' Image hash matches.' : (token.metadata?.image_hash ? ' Image not provided (N/A).' : '');
+      const warnBox = (originTier.tier === 'ai') ? 'warn' : 'ok';
+      const title = (originTier.tier === 'ai') ? 'VERIFIED (BUT ORIGIN=AI) ⚠️' : 'HUMAN VERIFIED ✅';
+      vSetVisual(title, `Signature OK, time OK, TraceNet OK, mindprint matches.${extra} ORIGIN: ${originTier.label}.`, warnBox);
+    }else{
+      vSetVisual('VERIFICATION FAILED ❌',`Signature OK, but identity signals are too weak. ORIGIN: ${originTier.label}.`,'bad');
     }
-    vSetVisual('HUMAN VERIFIED ✅', summary, 'ok');
-  }else if(!expired && sigOK){
-    vSetVisual('VERIFICATION FAILED ❌','Too few signals match (need at least 4/5).','bad');
   }
 
-  if(v_checks_panel){
-    v_checks_panel.classList.remove('hide');
-  }
-  setCheck(chk_sign,    sigOK ? 'ok' : 'fail');
-  setCheck(chk_time,    !expired ? 'ok' : 'fail');
+  if(v_checks_panel) v_checks_panel.classList.remove('hide');
+  setCheck(chk_sign, sigOK ? 'ok' : 'fail');
+  setCheck(chk_time, !expired ? 'ok' : 'fail');
   setCheck(chk_creator, creatorOK ? 'ok' : 'fail');
-  setCheck(chk_mind,    cid ? (mindOK ? 'ok' : 'fail') : 'na');
-  setCheck(chk_img,     token.metadata?.image_hash ? (imgOK ? 'ok' : 'fail') : 'na');
+  setCheck(chk_mind, cid ? (mindOK ? 'ok' : 'fail') : 'na');
+  setCheck(chk_img, token.metadata?.image_hash ? imgState : 'na');
 
   if(chk_summary){
     chk_summary.textContent =
-      `Signal-score: ${passed}/5. `+
-      (passed>=4
-        ? 'Enough signals satisfied to treat the badge as human-verified.'
-        : 'Too few signals satisfied to verify this badge as human.');
+      `Signal-score: ${passedStrict}/5. ORIGIN tier: ${originTier.label}.`;
   }
 
-  // update verification log for dashboard
+  // dashboard log
+  let statusForLog = 'failed';
+  if(expired) statusForLog = 'expired';
+  else if(sigOK && !expired && creatorOK && mindOK){
+    statusForLog = (originTier.tier === 'ai') ? 'warning' : 'verified';
+  }
+
   verificationLog.unshift({
     time: new Date().toISOString(),
     status: statusForLog,
     creatorId: cid || '(none)',
-    origin: token.metadata?.content_origin?.label || 'n/a'
+    origin: `${originTier.label} · ${(typeof originScore==='number' ? originScore.toFixed(3) : 'n/a')}`
   });
   if(verificationLog.length > 5) verificationLog = verificationLog.slice(0,5);
   renderVerificationLog();
 }
-
 async function smartVerify(){
   const badgeFile = v_file && v_file.files ? v_file.files[0] : null;
   const imgFile   = v_img && v_img.files ? (v_img.files[0] || null) : null;
-  if(!badgeFile){
-    alert('Upload a TRACE badge (.svg) first.');
-    return;
-  }
+  if(!badgeFile){ alert('Upload a TRACE badge (.svg) first.'); return; }
   const text = await badgeFile.text();
   const token = parseBadgeFromText(text);
-  if(!token){
-    alert('Could not read badge data.');
-    return;
-  }
+  if(!token){ alert('Could not read badge data.'); return; }
   await verifyToken(token, imgFile);
 }
 async function quickVerifyCurrent(){
